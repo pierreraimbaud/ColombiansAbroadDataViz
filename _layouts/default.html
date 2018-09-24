@@ -13,12 +13,22 @@
     <![endif]-->
   </head>
   <body>
+
     <div id = "svgcontainer">
-          <h3>Colombians registered abroad !</h3>
+          <h3>Colombians registered abroad</h3>
     </div>
 
     <script src="https://d3js.org/d3.v5.min.js"></script>
+
     <script>
+
+      // var fruits = ['apple', 'mango', 'banana', 'orange'];
+      // d3.select('ul')
+      //   .selectAll('li')
+      //   .data(fruits)
+      //   .enter()
+      //   .append('li')
+      //   .text(function(d) { return d; });
 
       // Margin data for viz
       const width = 800;
@@ -31,13 +41,6 @@
       d3.select('h3').style('color', 'darkblue');
       d3.select('h3').style('font-size', '24px');
 
-      // var fruits = ['apple', 'mango', 'banana', 'orange'];
-      // d3.select('ul')
-      //   .selectAll('li')
-      //   .data(fruits)
-      //   .enter()
-      //   .append('li')
-      //   .text(function(d) { return d; });
 
       // SVG and g elements
       var svg = d3.select("#svgcontainer")
@@ -70,42 +73,14 @@
         .call(d3.axisLeft(y));
 
     </script>
+
     <div class="wrapper">
       <header>
-        <h1><a href="">ColombiansAbroadViz</a></h1>
+        <h1><a href="">auto-link</a></h1>
         <p></p>
-        <p class="view"><a href="https://github.com/pierreraimbaud/ColombiansAbroadViz">View the Project on GitHub <small>pierreraimbaud/ColombiansAbroadViz</small></a></p>
+        <p class="view"><a href="https://github.com/pierreraimbaud/ColombiansAbroadViz">Project URL on GitHub <small>pierreraimbaud/ColombiansAbroadViz</small></a></p>
       </header>
-      <section>
-Welcome to GitHub Pages
-
-You can use the editor on GitHub to maintain and preview the content for your website in Markdown files.
-
-Whenever you commit to this repository, GitHub Pages will run Jekyll to rebuild the pages in your site, from the content in your Markdown files.
-
-Markdown
-
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-
-For more details see GitHub Flavored Markdown.
-      </section>
+      <section>MD zone</section>
       <footer>
         
         <p>This project is maintained by <a href="https://github.com/pierreraimbaud">pierreraimbaud</a></p>
