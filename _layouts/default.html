@@ -13,12 +13,10 @@
     <![endif]-->
   </head>
   <body>
-    <h3>Colombians registered abroad test</h3>
     <div id = "svgcontainer">
-        <ul></ul>
-        <svg width = width height = height>
-        </svg>
-      </div>
+          <h3>Colombians registered abroad !</h3>
+    </div>
+
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script>
 
@@ -29,33 +27,36 @@
       const iwidth = width - margin.left -margin.right;
       const iheight = height - margin.top - margin.bottom;
 
-      d3 = require('d3')
+      //d3 = require('d3')
       d3.select('h3').style('color', 'darkblue');
       d3.select('h3').style('font-size', '24px');
 
-      var fruits = ['apple', 'mango', 'banana', 'orange'];
-      d3.select('ul')
-        .selectAll('li')
-        .data(fruits)
-        .enter()
-        .append('li')
-        .text(function(d) { return d; });
+      // var fruits = ['apple', 'mango', 'banana', 'orange'];
+      // d3.select('ul')
+      //   .selectAll('li')
+      //   .data(fruits)
+      //   .enter()
+      //   .append('li')
+      //   .text(function(d) { return d; });
 
       // SVG and g elements
-      var svg = d3.select(DOM.svg(iwidth + margin.left + margin.right, iheight + margin.top + margin.bottom));
+      var svg = d3.select("#svgcontainer")
+            .append("svg")
+            .attr("width", iwidth + margin.left + margin.right)
+            .attr("height", iheight + margin.top + margin.bottom);
       var g = svg.append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
       // X scale definition 
-      const x = d3.scaleBand();
+      var x = d3.scaleBand();
       // X domain (as the numbers of elements we could allow us to write them manually, otherwise make it automatic
       x//.domain([2012,2013,2014,2015,2016,2017,2018])
       .range([0, iwidth])
       .paddingInner(1);
     
       // Y scale definition
-      const y = d3.scaleLinear()
+      var y = d3.scaleLinear()
       //.domain([0, d3.max(dataByYear, d => d.value)])
       .range([iheight, 0]);
     
