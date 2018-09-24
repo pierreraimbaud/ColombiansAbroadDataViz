@@ -15,7 +15,7 @@
   <body>
 
     <div id = "svgcontainer">
-          <h3>Colombians registered abroad (currently)</h3>
+          <h3>Colombians registered abroad ()</h3>
     </div>
 
     <script src="https://d3js.org/d3.v5.min.js"></script>
@@ -54,7 +54,7 @@
                                                 )
                                          .entries(dataOrigin);
 
-      var dataCountryListVal = dataCountryListVal = d3.set(dataCountryList.map( d => d.key )).values();
+      var dataCountryListVal = d3.set(dataCountryList.map( d => d.key )).values();
 
       // SVG and g elements
       var svg = d3.select("#svgcontainer")
