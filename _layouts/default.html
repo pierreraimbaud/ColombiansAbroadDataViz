@@ -17,19 +17,49 @@
 
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script>
-    // Margin data for viz
-    const width = 800;
-    const height = 400;
-    const margin = ({top: 40, right: 120, bottom: 50, left: 100});
-    const iwidth = width - margin.left -margin.right;
-    const iheight = height - margin.top - margin.bottom;
-    d3 = require('d3')
-    d3.select('h3').style('color', 'darkblue');
-    d3.select('h3').style('font-size', '24px');
-    // SVG and g elements
-    const svg = d3.select(DOM.svg(iwidth + margin.left + margin.right, iheight + margin.top + margin.bottom));
-    const g = svg.append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    diag : {
+      // Margin data for viz
+      const width = 800;
+      const height = 400;
+      const margin = {top: 40, right: 120, bottom: 50, left: 100};
+      const iwidth = width - margin.left -margin.right;
+      const iheight = height - margin.top - margin.bottom;
+
+      d3 = require('d3')
+      d3.select('h3').style('color', 'darkblue');
+      d3.select('h3').style('font-size', '24px');
+
+
+      // SVG and g elements
+      const svg = d3.select(DOM.svg(iwidth + margin.left + margin.right, iheight + margin.top + margin.bottom));
+      const g = svg.append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+      // X scale definition 
+      const x = d3.scaleBand();
+      // X domain (as the numbers of elements we could allow us to write them manually, otherwise make it automatic
+      x//.domain([2012,2013,2014,2015,2016,2017,2018])
+      .range([0, iwidth])
+      .paddingInner(1);
+    
+      // Y scale definition
+      const y = d3.scaleLinear()
+      //.domain([0, d3.max(dataByYear, d => d.value)])
+      .range([iheight, 0]);
+    
+      // Axis x
+      g.append("g")
+        .call(d3.axisBottom(x))
+        .attr("transform", `translate(0,${iheight})`);
+    
+      // Axis y  
+      g.append("g")
+        .call(d3.axisLeft(y));
+      return svg.node();
+    }
+    
     </script>
     <div class="wrapper">
       <header>
