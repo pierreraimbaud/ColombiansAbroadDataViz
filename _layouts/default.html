@@ -33,7 +33,7 @@
       d3.select('h3').style('color', 'green');
       d3.select('h3').style('font-size', '24px');
 
-      var dataOrigin=d3.csv("https://raw.githubusercontent.com/pierreraimbaud/ColombiansAbroadViz/master/Colombianos_registrados_en_el_exterior.csv", function(data) {
+      var dataOrigin=d3.csv("https://pierreraimbaud.github.io/ColombiansAbroadViz/Colombianos_registrados_en_el_exterior.csv", function(data) {
           console.log(data);
 
           var dataCountryList = d3.nest().key(function(d)
