@@ -97,22 +97,26 @@
                                                       return d.País;
                                                     
                                                  })
-                                             .rollup(function(d)
-                                                    {
-                                                          return d3.sum(d, 
-                                                          function(d)
-                                                          {
-                                                            return d."Cantidad de personas"
-                                                          }
-                                                         )
+        .rollup(function(d) { 
+   return d3.sum(d, function(g) {return g.Cantidad_de_personas; });
+  })
+                                            // .rollup(function(d)
+                                                   // {
+                                                          //return d3.sum(d, 
+                                                         // function(d)
+                                                        //  {
+                                                       //     return d.Cantidad_de_personas;
+                                                         // }
+                                                       //  )
                                          
-                                                    }
-                                                   )
+                                                //    }
+                                               //    )
                                             .entries(dataOrigin);
+     
         console.log(dataCountryList);
         //debugger
         // X scale definition      
-        x.domain(dataCountryList.map(function(d) { return d.País; }));
+        x.domain(dataCountryList.map(function(d) { return d.key; }));
         y.domain([0, d3.max(dataCountryList, function(d) { return d.value; })]);
 
         // Axis x
