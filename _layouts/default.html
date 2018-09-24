@@ -15,7 +15,7 @@
   <body>
 
     <div id = "svgcontainer">
-          <h3>Colombians registered abroad</h3>
+          <h3>Colombians registered abroad (currently)</h3>
     </div>
 
     <script src="https://d3js.org/d3.v5.min.js"></script>
@@ -79,7 +79,7 @@
     
       x.domain(dataCountryList.map(function(d) { return d.key; }));
       y.domain([0, d3.max(dataCountryList, function(d) { return d.value; })]);
-      
+
       // Axis x
       g.append("g")
         .call(d3.axisBottom(x))
