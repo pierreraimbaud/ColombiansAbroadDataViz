@@ -44,7 +44,7 @@
       var dataOrigin=d3.csv("https://raw.githubusercontent.com/pierreraimbaud/ColombiansAbroadViz/master/Colombianos_registrados_en_el_exterior.csv");
       var dataCountryList = d3.nest().key(function(d)
                                               {
-                                                  return d.País
+                                                  return d.País;
                                                 
                                               })
                                          .rollup(function(leaves)
@@ -69,13 +69,13 @@
       var x = d3.scaleBand();
       // X domain (as the numbers of elements we could allow us to write them manually, otherwise make it automatic
       //.domain([2012,2013,2014,2015,2016,2017,2018])
-      .range([0, iwidth])
+      x.range([0, iwidth])
       .paddingInner(1);
     
       // Y scale definition
-      var y = d3.scaleLinear()
+      var y = d3.scaleLinear();
       //.domain([0, d3.max(dataByYear, d => d.value)])
-      .range([iheight, 0]);
+      y.range([iheight, 0]);
     
       x.domain(dataCountryList.map(function(d) { return d.key; }));
       y.domain([0, d3.max(dataCountryList, function(d) { return d.value; })]);
