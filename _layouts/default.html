@@ -41,6 +41,20 @@
       d3.select('h3').style('color', 'darkblue');
       d3.select('h3').style('font-size', '24px');
 
+      var dataOrigin=d3.csv("https://raw.githubusercontent.com/pierreraimbaud/ColombiansAbroadViz/master/Colombianos_registrados_en_el_exterior.csv");
+      var dataCountryList = d3.nest().key(function(d)
+                                              {
+                                                  return d.País
+                                                
+                                              })
+                                         .rollup(function(leaves)
+                                                 {
+                                                    return leaves.length;
+                                                 }
+                                                )
+                                         .entries(dataOrigin);
+
+      var dataCountryListVal = dataCountryListVal = d3.set(dataCountryList.map( d => d.key )).values();
 
       // SVG and g elements
       var svg = d3.select("#svgcontainer")
@@ -63,6 +77,9 @@
       //.domain([0, d3.max(dataByYear, d => d.value)])
       .range([iheight, 0]);
     
+      x.domain(dataCountryList.map(function(d) { return d.key; }));
+      y.domain([0, d3.max(dataCountryList, function(d) { return d.value; })]);
+      
       // Axis x
       g.append("g")
         .call(d3.axisBottom(x))
