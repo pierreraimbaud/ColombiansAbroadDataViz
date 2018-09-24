@@ -29,10 +29,17 @@
       d3.select('h3').style('color', 'darkblue');
       d3.select('h3').style('font-size', '24px');
 
+      var fruits = ['apple', 'mango', 'banana', 'orange'];
+      d3.select('ul')
+        .selectAll('li')
+        .data(fruits)
+        .enter()
+        .append('li')
+        .text(function(d) { return d; });
 
       // SVG and g elements
-      const svg = d3.select(DOM.svg(iwidth + margin.left + margin.right, iheight + margin.top + margin.bottom));
-      const g = svg.append("g")
+      var svg = d3.select(DOM.svg(iwidth + margin.left + margin.right, iheight + margin.top + margin.bottom));
+      var g = svg.append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
