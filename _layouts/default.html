@@ -22,14 +22,6 @@
 
     <script>
 
-      // var fruits = ['apple', 'mango', 'banana', 'orange'];
-      // d3.select('ul')
-      //   .selectAll('li')
-      //   .data(fruits)
-      //   .enter()
-      //   .append('li')
-      //   .text(function(d) { return d; });
-
       // Margin data for viz
       const width = 800;
       const height = 400;
@@ -38,68 +30,70 @@
       const iheight = height - margin.top - margin.bottom;
 
       //d3 = require('d3')
-      d3.select('h3').style('color', 'darkblue');
+      d3.select('h3').style('color', 'green');
       d3.select('h3').style('font-size', '24px');
 
-      var dataOrigin=d3.csv("https://raw.githubusercontent.com/pierreraimbaud/ColombiansAbroadViz/master/Colombianos_registrados_en_el_exterior.csv");
-      var dataCountryList = d3.nest().key(function(d)
-                                              {
-                                                  return d.País;
-                                                
-                                              })
-                                         .rollup(function(leaves)
-                                                 {
-                                                    return leaves.length;
-                                                 }
-                                                )
-                                         .entries(dataOrigin);
+      var dataOrigin=d3.csv("https://raw.githubusercontent.com/pierreraimbaud/ColombiansAbroadViz/master/Colombianos_registrados_en_el_exterior.csv", function(data) {
+          console.log(data[0]);
 
-      var dataCountryListVal = d3.set(dataCountryList.map( d => d.key )).values();
+          var dataCountryList = d3.nest().key(function(d)
+                                                  {
+                                                      return d.País;
+                                                    
+                                                  })
+                                             .rollup(function(leaves)
+                                                     {
+                                                        return leaves.length;
+                                                     }
+                                                    )
+                                             .entries(dataOrigin)
 
-      // SVG and g elements
-      var svg = d3.select("#svgcontainer")
-            .append("svg")
-            .attr("width", iwidth + margin.left + margin.right)
-            .attr("height", iheight + margin.top + margin.bottom);
-      var g = svg.append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+          var dataCountryListVal = d3.set(dataCountryList.map( d => d.key )).values();
+
+          // SVG and g elements
+          var svg = d3.select("#svgcontainer")
+                .append("svg")
+                .attr("width", iwidth + margin.left + margin.right)
+                .attr("height", iheight + margin.top + margin.bottom);
+          var g = svg.append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
-      // X scale definition 
-      var x = d3.scaleBand();
-      // X domain (as the numbers of elements we could allow us to write them manually, otherwise make it automatic
-      //.domain([2012,2013,2014,2015,2016,2017,2018])
-      x.range([0, iwidth])
-      .paddingInner(1);
-    
-      // Y scale definition
-      var y = d3.scaleLinear();
-      //.domain([0, d3.max(dataByYear, d => d.value)])
-      y.range([iheight, 0]);
-    
-      x.domain(dataCountryList.map(function(d) { return d.key; }));
-      y.domain([0, d3.max(dataCountryList, function(d) { return d.value; })]);
+          // X scale definition 
+          var x = d3.scaleBand();
+          // X domain (as the numbers of elements we could allow us to write them manually, otherwise make it automatic
+          //.domain([2012,2013,2014,2015,2016,2017,2018])
+          x.range([0, iwidth])
+          .paddingInner(1);
+        
+          // Y scale definition
+          var y = d3.scaleLinear();
+          //.domain([0, d3.max(dataByYear, d => d.value)])
+          y.range([iheight, 0]);
+        
+          x.domain(dataCountryList.map(function(d) { return d.key; }));
+          y.domain([0, d3.max(dataCountryList, function(d) { return d.value; })]);
 
-      // Axis x
-      g.append("g")
-        .call(d3.axisBottom(x))
-        .attr("transform", `translate(0,${iheight})`);
-    
-      // Axis y  
-      g.append("g")
-        .call(d3.axisLeft(y));
+          // Axis x
+          g.append("g")
+            .call(d3.axisBottom(x))
+            .attr("transform", `translate(0,${iheight})`);
+        
+          // Axis y  
+          g.append("g")
+            .call(d3.axisLeft(y));
 
-  const line = d3.line()
-    .x( d=> x(d.key))
-    .y( d=> y(d.value));
-  
-  // Path element
-  g.append("path")
-    .attr("class", "line")
-    .attr("d", line(dataCountryList))
-    .style("stroke", "salmon")
-    .style("fill", "none");
-
+      const line = d3.line()
+        .x( d=> x(d.key))
+        .y( d=> y(d.value));
+      
+      // Path element
+      g.append("path")
+        .attr("class", "line")
+        .attr("d", line(dataCountryList))
+        .style("stroke", "salmon")
+        .style("fill", "none");
+    };
     </script>
 
     <div class="wrapper">
