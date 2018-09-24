@@ -89,6 +89,17 @@
       g.append("g")
         .call(d3.axisLeft(y));
 
+  const line = d3.line()
+    .x( d=> x(d.key))
+    .y( d=> y(d.value));
+  
+  // Path element
+  g.append("path")
+    .attr("class", "line")
+    .attr("d", line(dataCountryList))
+    .style("stroke", "salmon")
+    .style("fill", "none");
+    
     </script>
 
     <div class="wrapper">
