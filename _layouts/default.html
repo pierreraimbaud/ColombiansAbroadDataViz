@@ -33,12 +33,12 @@
     }
 
     h2 {
-      font-size : 150%;
+      font-size : 120%;
       color:#489450;
     }
 
     h3 {
-      font-size : 200%;
+      font-size : 180%;
       color:#696969;
       text-align: center;
     }
@@ -72,25 +72,48 @@
       </div>
 
        <div id = "explcontainer">
-            <h2>Colombians registered abroad</h2>
-            <p style="color:#789410;font-size:130%">lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem</p>
-            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
-            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
-            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
-            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
-            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
-            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
-            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
-            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
-            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
-            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
-            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
-            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
-            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
-            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
-            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
+            <h2>What, why and how ? Understanding this visualization thanks to abstraction</h2>
+            <p style="color:#789410;font-size:110%">What ?</p>
+            <p style="color:#111111;">
+              This visualization uses open data from data.gov.com. The aim is to show some interesting insights about this data : this is the principal objective. The other ones are more academic, like use d3 and publish the web page on githubPages. The technologies used are d3 (javascript), HTML, CSS and git (nodejs for developing with a local server). There is no specific prerequisites for enjoying the visualization neither for using the code available in github.
+              To be more precise about these insights, in the following paragraphs we will explain what were our data (through data abstraction), why this visualization (through task abstraction) and the reason of how we choice to present the data (idioms : visual encoding and interaction) ; thanks to that, we have been able to answer to the title question : Colombian migration : where do people go more ? And who are they ?
+              <br/><br/>
+              What ?
+              <br/><br/>
+              The dataset type is a <b>table</b>. The dataset availability is <b>static</b> because the dataset available on the website is not modified in real-time, so we just download the file from the website and create a new file of processed data (correcting absent values and modifying the columns spaces – English names and without spaces), then we load it. Then for separating the dataset in smaller ones, and also to get <b>derive data</b>, we process this file in the visualization with d3.<br/><br/>
 
+              Before processing the data in d3, the <b>items</b> represent one or one group of people, which have the same characteristics (living country, country iso code, age, age group, level of education, gender, quantity of people). These characteristics are the <b>attributes</b> (named just above).<br/><br/>
 
+              The attributes Country, ISOCode, AgeGroup, AcademicLevel and Gender are categorical (list of different country and iso code, categories of ages – baby, child, adolescent, young adult, adult, elderly adult), list of academic level (PhD, Master etc.), male, female or not given information categories.<br/><br/>
+
+              The attributes Age and Quantity are ordered and quantitative (because they are numbers) and sequential (the age is also positive and there is no separation in groups so no diverging– the attribute AgeGroup has been created for this!), the quantity is also positive without diverging).<br/><br/>
+
+              After processing the data, we obtain new attributes. Each time we consider the people living in one country. <br/>
+              The average age, from the attribute age, which is also ordered, quantitative and sequential for the same reasons than the attribute age.<br/>
+              The male rate, the female rate, the “no gender” rate, all from the attribute Gender, the PhD rate and Primary rate, from the attribute AcademicLevel, the children rate, the adult rate and the elderly adult rate, from AgeGroup attribute, which are ordered, quantitative and sequential because of being rates of an amount of people.<br/><br/>
+
+              <b>Why ?</b><br/><br/>
+
+              Which tasks do we want to perform here ? <br/><br/>
+
+              As said in the title, first, the primary task we want to do is to show where the Colombian mostly have been migrating up-to-day.
+              In terms of Tamara, at a high-level, the action is <b>Discover</b> and the target is <b>Features</b>. To be more precise, at a mid-level the action is <b>Browse</b> and the target is <b>Extremes</b> (only the major ones for this case). We could also say at a low-level that the action is <b>Identify</b> and the target is <b>Outliers</b> (we can’t say <b>summarize</b> because we deliberately do not show all the data, eliminating the countries were less than 1000 have been going. The <b>insight</b> is that people mostly have been to Venezuela, United States of America and Spain.<br/><br/>
+
+              The global secondary task here, also as described in the title, is to know better about these Colombian people. In terms of Tamara, this global task could be divided in smaller task, for each visualization (depending on the dataset). For these secondary tasks we could eventually consider sometimes an action of summarize, considering that the characteristics of people in countries where less than 1000 Colombian people have been are not significant (comparing to the amount of people in the others countries in the world).<br/><br/>
+
+              In dataset 2 (Average age), one task is <b>Summarize Distribution</b> and another one is <b>Browse Extremes</b> (this time, both of them) ; for example, we see that people are younger (left extreme) in the countries near Colombia (Argentina, Brasil, Panama) + Spain ; but we can’t make a conclusion about that (saying people are younger for Latin and Central America) because for example the other extreme is Dominican Republic which is near Colombia also.<br/><br/>
+
+              In dataset 3 and 4 (Male and femal age), one task is <b>Browse Extremes</b> – one <b>insight</b> is the confirmation of the common thought that few women go to United Arab Emirates and another one is a surprise : less men than women go to Italia (we could expect the contrary which the “cliches”).<br/><br/>
+
+              In dataset 7 (Primary rate), combining it with dataset 8 (Child rate), one <b>insight</b>, by doing the task <b>Browse Extremes</b> in dataset 7 and then <b>Locate “the outlier”</b> (outlier in dataset 7, not in 8) Venezuela in dataset 8,  - the two tasks together can be considered as a <b>Compare Feature</b>, is the fact that we can be surprised that despite being in first position for primary level education rate, Venezuela is not in the first rate, far for this, in dataset 8 about children rate. So maybe one explication is that more than in other countries, the Colombian people which have been to Venezuela do not make other studies than primary school. We could compare feature also with dataset 10, where,  Browsing the Extremes, we see that the major elderly rate is also in Venezuela so maybe there is a correlation between these data – maybe in one period of the Colombia history not so recent many people go to Venezuela and at this time the education was not so developed or that no founds for that for the migrants.<br/><br/>
+
+              <b>How ?</b><br/><br/>
+
+              We choose bar charts for this visualization.<br/><br/>
+              First, we have to say that for all the dataset, in the x axis, we have the country iso code attribute, which is categorical and in the y axis we have an amount or a rate, so ordered attributes.<br/><br/>
+              As a result, about the visual encoding, the mark we choose is line and the channel is vertical position (which give a bar chart) ; it can be easily explain because this channel is the most effective for the ordered attributes (which should always use magnitude channels, in theory, so from this point of view, we use a good and expressive type).
+              We choose to order and align the marks in our representation because it combines well with ordered attributes.<br/><br/>
+              Then about the interaction, we decide to not provide to the user reduction, because we already have done that, by processing the data, in order to make directly the correct focus for our task. The provided interaction is a button for switching between the dataset, so it’s a <b>Change manipulation</b>. We provide also a <b>“Select” manipulation</b>, with a mouseover which give more detailed information about the current item.</p>
       </div>
 
     </div>
@@ -125,7 +148,7 @@
       //Dataset current index
       var dataIndex=1;
 
-      var datasetsTitles = ["Total of people", "Average age", "Male percent", "Female percent", "No gender registered percent", "PhD level of study percent", "Primary level of study percent", "Children percent", "Adults percent", "Elderly people percent"];
+      var datasetsTitles = ["Total of people", "Average age", "Male rate", "Female rate", "No gender registered rate", "PhD level of study rate", "Primary level of study rate", "Children rate", "Adults rate", "Elderly people rate"];
 
       var maxIndex = datasetsTitles.length;
 
