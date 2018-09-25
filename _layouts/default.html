@@ -20,8 +20,18 @@
       fill: steelblue;
     }
 
-    .bar:hover {
+/*    .bar:hover {
       fill: brown;
+    }*/
+    .toolTip {
+      position: absolute;
+      display: none;
+      min-width: 80px;
+      height: auto;
+      background: none repeat scroll 0 0 #ffffff;
+      border: 1px solid #6F257F;
+      padding: 14px;
+      text-align: center;
     }
 
     .axis--x path {
@@ -41,7 +51,7 @@
       // Margin data for viz
       const width = 800;
       const height = 400;
-      const margin = {top: 40, right: 120, bottom: 50, left: 100};
+      const margin = {top: 40, right: 70, bottom: 50, left: 50};
       const iwidth = width - margin.left -margin.right;
       const iheight = height - margin.top - margin.bottom;
 
@@ -61,13 +71,15 @@
       var x = d3.scaleBand();
           // X domain (as the numbers of elements we could allow us to write them manually, otherwise make it automatic
           //.domain([2012,2013,2014,2015,2016,2017,2018])
-      x.range([0, iwidth])
+      x.rangeRound([0, iwidth])
         .paddingInner(1);
         
       // Y scale definition
       var y = d3.scaleLinear();
       //.domain([0, d3.max(dataByYear, d => d.value)])
-      y.range([iheight, 0]);
+      y.rangeRound([iheight, 0]);
+
+      var tooltip ;
 
       // var promise1 = new Promise(function(resolve, reject) {
       //   d3.csv('https://raw.githubusercontent.com/pierreraimbaud/ColombiansAbroadViz/master/GroupByCountryFile.csv', function(dataOrigin) {
@@ -90,6 +102,8 @@
           dothejob();
       });
      
+      var tooltip = d3.select("body").append("div").attr("class", "toolTip");
+
       function dothejob()
       {
         var dataCountryList = d3.nest()
@@ -102,7 +116,11 @@
           });
         })
         .entries(dataOrigin);
-     
+
+        dataCountryList.sort(function(x, y){
+           return d3.ascending(x.value, y.value);
+        });
+
         console.log(dataCountryList);
 
         // X scale definition      
@@ -116,19 +134,49 @@
         
         // Axis y  
         g.append("g")
-            .call(d3.axisLeft(y));
+            .call(d3.axisLeft(y))
+            .append("text")
+            .attr("fill", "#000")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", "0.71em")
+            .attr("text-anchor", "end")
+            .text("Number of people");
 
-        //Line
-        const line = d3.line()
-          .x( d=> x(d.key))
-          .y( d=> y(d.value));
+        g.selectAll(".bar")
+          .data(dataCountryList)
+          .enter().append("rect")
+          .attr("class", "bar")
+          .attr("x", function (d) {
+            return x(d.key);
+          })
+          .attr("y", function (d) {
+            return y(d.value)-(margin.top+margin.bottom);
+          })
+          .attr("width", 2)
+          .attr("height", function (d) {
+            return height - y(d.value);
+          })
+          .on("mousemove", function(d){
+            tooltip
+              .style("left", d3.event.pageX - 50 + "px")
+              .style("top", d3.event.pageY - 70 + "px")
+              .style("display", "inline-block")
+              .html("" (d.value));
+          })
+          .on("mouseout", function(d){ tooltip.style("display", "none");});
+
+        // //Line
+        // const line = d3.line()
+        //   .x( d=> x(d.key))
+        //   .y( d=> y(d.value));
         
-        // Path element
-        g.append("path")
-          .attr("class", "line")
-          .attr("d", line(dataCountryList))
-          .style("stroke", "salmon")
-          .style("fill", "none");
+        // // Path element
+        // g.append("path")
+        //   .attr("class", "line")
+        //   .attr("d", line(dataCountryList))
+        //   .style("stroke", "salmon")
+        //   .style("fill", "none");
       }
 
 
