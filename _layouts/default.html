@@ -23,11 +23,7 @@
     .bar:hover {
       fill: brown;
     }
-    .bar x {
-  fill: red;
-  font: 10px sans-serif;
-  text-anchor: end;
-}
+
     .toolTip {
       position: absolute;
       display: none;
@@ -59,6 +55,7 @@
       const margin = {top: 40, right: 70, bottom: 50, left: 50};
       const iwidth = width - margin.left -margin.right;
       const iheight = height - margin.top - margin.bottom;
+      var barwidth = 26;
 
       d3.select('h3').style('color', 'green');
       d3.select('h3').style('font-size', '24px');
@@ -72,17 +69,7 @@
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
       var dataOrigin;
-
-      var x = d3.scaleBand();
-          // X domain (as the numbers of elements we could allow us to write them manually, otherwise make it automatic
-          //.domain([2012,2013,2014,2015,2016,2017,2018])
-      x.rangeRound([0, iwidth])
-        .paddingInner(1);
-        
-      // Y scale definition
-      var y = d3.scaleLinear();
-      //.domain([0, d3.max(dataByYear, d => d.value)])
-      y.rangeRound([iheight, 0]);
+      var dataCountryList;
 
       var tooltip ;
 
@@ -101,6 +88,7 @@
       // // expected output: "Success!"
       // });
 
+
       d3.csv('https://raw.githubusercontent.com/pierreraimbaud/ColombiansAbroadViz/master/Colombianos_registrados_en_el_exterior.csv').then(function(data) {
           console.log(data);
           dataOrigin = data;
@@ -111,6 +99,9 @@
 
       function dothejob()
       {
+         
+        var colors = ["b33040", "#d25c4d"];
+
         console.log(dataOrigin);
 
         var dataCountry = d3.nest()
@@ -131,7 +122,7 @@
         console.log(dataCountry);
 
         dataCountryList = dataCountry.filter(function (d){
-                                  return d.value.amount>49;
+                                  return (d.value.amount/1000)>1;
                                 });
 
         dataCountryList.sort(function(x, y){
@@ -140,11 +131,40 @@
 
         console.log(dataCountryList);
 
-        // X scale definition      
-        x.domain(dataCountryList.map(function(d) { return d.value.isoCode; }));
-       // .attr("transform", "rotate(-90)");
-        y.domain([0, d3.max(dataCountryList, function(d) { return d.value.amount; })]);
 
+        var genderDataList = d3.nest()
+        .key(function(d){
+          return d.Gender;
+        })
+        .entries(dataOrigin);
+
+        console.log(genderDataList);
+
+
+        var x = d3.scaleBand()
+          .rangeRound([0, iwidth])
+          .paddingInner(1).paddingOuter(1);
+          //.align(3);
+           // X scale definition      
+        x.domain(dataCountryList.map(function(d) {
+         return d.value.isoCode; }));
+
+        // Y scale definition
+        var maxxx = d3.max(dataCountryList, function(d) { 
+            
+            return +d.value.amount}
+            );
+
+        var y = d3.scaleLinear()
+          .rangeRound([iheight, 0])
+          .domain([0, maxxx]);
+
+        // var groups = svg.selectAll("g.gender")
+        //   .data(genderDataList)
+        //   .enter().append("g")
+        //   .attr("class", "gender")
+        //   .style("fill", function(d, i) { return colors[i]; });
+        
         // Axis x
         g.append("g")
             .call(d3.axisBottom(x))
@@ -156,8 +176,6 @@
             .append("text")
             .attr("fill", "#000")
             .attr("transform", "rotate(-90)")
-            .attr("y", 6)
-            .attr("dy", "0.71em")
             .attr("text-anchor", "end")
             .text("Number of people");
 
@@ -166,25 +184,21 @@
           .enter().append("rect")
           .attr("class", "bar");
 
+
         var attrX = rect.attr("x", function (d) {
-              return x(d.value.isoCode);
+              return x(d.value.isoCode)-barwidth/2;
             })
 
         var attrY = rect.attr("y", function (d) {
-              return y(d.value.amount)-(margin.top+margin.bottom);
+              return y(d.value.amount);
             });
 
-        rect.attr("width", 10)
+        rect.attr("width", barwidth)
             .attr("height", function (d) {
-              return height - y(d.value.amount);
+              return height - y(d.value.amount)-(margin.top+margin.bottom);
             });
 
         rect.on("mousemove", function(d){
-                          // console.log (height - y(d.value.amount));
-                          // console.log (height);
-                          // console.log (y(d.value.amount));
-                          // console.log (d.value.amount);
-
               tooltip
                 .style("left", d3.event.pageX - 50 + "px")
                 .style("top", d3.event.pageY - 70 + "px")
@@ -193,10 +207,10 @@
             })
             .on("mouseout", function(d){ tooltip.style("display", "none");});
 
-        // //Line
+        //Line
         // const line = d3.line()
-        //   .x( d=> x(d.key))
-        //   .y( d=> y(d.value));
+        //   .x( d=> x(d.value.isoCode))
+        //   .y( d=> y(d.value.amount));
         
         // // Path element
         // g.append("path")
