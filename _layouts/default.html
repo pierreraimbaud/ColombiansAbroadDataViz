@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-
-
     <link rel="stylesheet" href="">
     <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -15,15 +12,12 @@
   <body>
 
     <style>
-
     .bar {
       fill: steelblue;
     }
-
     .bar:hover {
       fill: brown;
     }
-
     .toolTip {
       position: absolute;
       display: none;
@@ -34,18 +28,20 @@
       padding: 14px;
       text-align: center;
     }
-
+    h3 {
+      font-size : 24px;
+      color:green;
+      text-align: center;
+    }
     .axis--x path {
       display: none;
     }
-
-    button  {float:left}
-
     </style>
 
     <div id = "svgcontainer">
           <h3>Colombians registered abroad</h3>
           <button>Switch data selection</button>
+          <br/>
           <p>Dataset 1</p>
     </div>
 
@@ -53,16 +49,15 @@
 
     <script>
 
-      // Margin data for viz
+      // Const margin data for viz
       const width = 900;
       const height = 500;
       const margin = {top: 40, right: 70, bottom: 50, left: 50};
       const iwidth = width - margin.left -margin.right;
       const iheight = height - margin.top - margin.bottom;
-      var barwidth = 26;
 
-      d3.select('h3').style('color', 'green');
-      d3.select('h3').style('font-size', '24px');
+      // Const bar chart
+      const barwidth = 26;
 
       // SVG and g elements
       var svg = d3.select("#svgcontainer")
@@ -72,208 +67,46 @@
       var g = svg.append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+      //Tooltip var
+      var tooltip = d3.select("body").append("div").attr("class", "toolTip");
+
+      //Dataset current index
+      var dataIndex=1;
+
+      // Original ata var
       var dataOrigin;
+
+      // Dataset 1
       var dataCountryList1;
+
+      // Dataset 2
       var dataCountryList2;
 
-      var tooltip ;
-
+      //Var for axis x and y
       var xdom; 
       var ydom; 
       var xaxis; 
       var yaxis; 
 
+      // Load csv with promise
       d3.csv('https://raw.githubusercontent.com/pierreraimbaud/ColombiansAbroadViz/master/Colombianos_registrados_en_el_exterior.csv').then(function(data) {
-          console.log(data);
           dataOrigin = data;
-          dothejob();
+          //Create bar chart
+          createBar();
       });
      
-      var tooltip = d3.select("body").append("div").attr("class", "toolTip");
-
-      function dothejob()
-      {
-        var dataIndex=1;
+      //Create bar chart
+      function createBar(){
 
         //button to swap over datasets
-            d3.select("button")
-                .on("click",function(){
-                   
-                     //select new data
-                    if (dataIndex==1) {
-                        dataIndex=2;  
-                    }
-                    else   {
-                        dataIndex=1;
-                    }
+        d3.select("button").on("click",function(){
+          updateBar();
+        });//end click function
 
-                    //rejoin data
-                    var rectss = g.selectAll(".bar")
-                        .data(eval("dataCountryList"+dataIndex));
-                    
-                    rectss.exit().remove();//remove unneeded circles
-                   
-                    //rejoin data
-                    xaxis = g.selectAll(".xaxis");
-                    
-                    xaxis.exit().remove();//remove unneeded axis
+        //var colors = ["b33040", "#d25c4d"];
 
-                      var yaxis = g.selectAll(".yaxis");
-                    
-                    xaxis.exit().remove();//remove unneeded axis
-
-                    xaxis.enter().append("xaxis")
-                      .attr("class", "xaxis");
-
-                     yaxis.enter().append("yaxis")
-                      .attr("class", "yaxis");
-
-                    rectss.enter().append("rect")
-                      .attr("class", "bar");
-
-                     var x = d3.scaleBand()
-                      .rangeRound([0, iwidth])
-                      .paddingInner(1).paddingOuter(1);
-                      //.align(3);
-                       // X scale definition      
-                     xdom = x.domain((eval("dataCountryList"+dataIndex)).map(function(d) {
-                     return d.value.isoCode; }));
-
-                    // Y scale definition
-                    var maxxx = d3.max(eval("dataCountryList"+dataIndex), function(d) { 
-                        
-                        return +d.value.amount}
-                        );
-
-                    var y = d3.scaleLinear()
-                      .rangeRound([iheight, 0]);
-                    ydom = y.domain([0, maxxx]);
-
-                    //var yTickValues = yaxis.ticks();
-                    //d3.select(".yaxis").call(d3.axisLeft(y).tickValues(yTickValues));
-
-                    var attrX = rectss.attr("x", function (d) {
-                      
-                        return x(d.value.isoCode)-barwidth/2;
-                      })
-
-                    var attrY = rectss.attr("y", function (d) {
-                      
-                        return y(d.value.amount);
-                      });
-
-                    rectss.attr("width", barwidth)
-                      .attr("height", function (d) {
-                        return height - y(d.value.amount)-(margin.top+margin.bottom);
-                      });//create any new circles needed
-
-
-                    //var xaxis = g.selectAll('g.xaxis');
-                      //var yaxis = g.selectAll('g.yaxis');
-
-                                            // Axis x
-                           // xaxis.enter()
-                      xaxis =g.append('g')
-                        .attr('class', 'xaxis axis')
-                                .call(d3.axisBottom(x))
-                                .attr("transform", `translate(0,${iheight})`)
-                                .attr("class", "x.axis");
-
-                            // Axis y  
-                            //yaxis.enter()
-                      yaxis =g.append('g')
-                        .attr('class', 'yaxis axis')
-                                .call(d3.axisLeft(y))
-                                .append("text")
-                                .attr("fill", "#000")
-                                .attr("transform", "rotate(-90)")
-                                .attr("text-anchor", "end")
-                                .text("Number of people")
-                                .attr("class", "y.axis");
-                    //update all circles to new positions
-                    // rectss.transition()
-                    //     .duration(500)
-                    //     .attr("cx",function(d,i){
-                    //         var spacing = lineLength/(eval("dataArray"+dataIndex).length);
-                    //         return xBuffer+(i*spacing)
-                    //     })
-                    //     .attr("cy",yBuffer)
-                    //     .attr("r",function(d,i){return d});
-
-                     d3.select("p").text("Dataset "+dataIndex);
-
-                });//end click function
-
-        var colors = ["b33040", "#d25c4d"];
-
-        console.log(dataOrigin);
-
-        var dataCountry = d3.nest()
-        .key(function(d){
-          return d.Country;
-        })
-        .rollup(function(d){
-          return {
-            amount : d3.sum(d, function(g){
-              return g.Quantity;
-          }),
-          isoCode : d[0].ISOCode,
-          detailByLine : d
-          }
-        })
-        .entries(dataOrigin);
-
-        console.log(dataCountry);
-
-        var dataCountryAge = d3.nest()
-          .key(function(d){
-            return d.key;
-          })
-          .rollup(function(d){
-            //debugger;
-            return {
-            people : d3.sum(d, function(g){
-            return g.value.amount;
-            }),
-            amount : d3.sum(d, function(g){
-              var kk =g.value.amount;
-              return d3.sum(g.value.detailByLine, function(k){
-                  return k.Age;
-              })/kk;
-            }),
-
-            isoCode : d[0].value.isoCode,
-            detailByLine : d[0].value.detailByLine
-            }
-          })
-          .entries(dataCountry);
-      
-        
-        console.log(dataCountryAge);
-
-        dataCountryList1 = dataCountry.filter(function (d){
-                                  return (d.value.amount/1000)>1;
-                                });
-
-        dataCountryList1.sort(function(x, y){
-           return d3.descending(x.value.amount, y.value.amount);
-        });
-
-        console.log(dataCountryList1);
-
-        dataCountryList2 =  dataCountryAge.filter(function (d){
-                                  return (d.value.people/1000)>1;
-                                });
-
-        console.log(dataCountryList2);
-
-        var genderDataList = d3.nest()
-        .key(function(d){
-          return d.Gender;
-        })
-        .entries(dataOrigin);
-
-        console.log(genderDataList);
+        //Data preparation (2 datasets)
+        prepareDatasets();
 
 
         var x = d3.scaleBand()
@@ -293,12 +126,6 @@
         var y = d3.scaleLinear()
           .rangeRound([iheight, 0]);
         ydom = y.domain([0, maxxx]);
-
-        // var groups = svg.selectAll("g.gender")
-        //   .data(genderDataList)
-        //   .enter().append("g")
-        //   .attr("class", "gender")
-        //   .style("fill", function(d, i) { return colors[i]; });
         
         // var xaxis = g.selectAll('g.xaxis')
         //   //.data(xdom)
@@ -349,20 +176,183 @@
                 .style("display", "inline-block")
                 .html(d.key + ": " +(d.value.amount));
             })
-            .on("mouseout", function(d){ tooltip.style("display", "none");});
+            .on("mouseout", function(d){ tooltip.style("display", "none");});                   
+      }
 
-        //Line
-        // const line = d3.line()
-        //   .x( d=> x(d.value.isoCode))
-        //   .y( d=> y(d.value.amount));
+      //Prepare datasets for bar chart
+      function prepareDatasets(){
+
+        //Nest data for getting it as (key=country, isoCode=ISO, amount=total of people, value=other data)
+        var dataCountry = d3.nest()
+          .key(function(d){
+            return d.Country;
+          })
+          .rollup(function(d){
+            return {
+              amount : d3.sum(d, function(g){
+                return g.Quantity;
+            }),
+            isoCode : d[0].ISOCode,
+            detailByLine : d
+            }
+          })
+          .entries(dataOrigin);
+
+        //Nest data for getting it as (key=country, isoCode=ISO, people=total of people, amount=average age, value=other data)
+        var dataCountryAge = d3.nest()
+          .key(function(d){
+            return d.key;
+          })
+          .rollup(function(d){
+            return {
+              people : d3.sum(d, function(g){
+                return g.value.amount;
+              }),
+              amount : d3.sum(d, function(g){
+                var kk =g.value.amount;
+                return d3.sum(g.value.detailByLine, function(k){
+                    return k.Age;})/kk;
+              }),
+              isoCode : d[0].value.isoCode,
+              detailByLine : d[0].value.detailByLine
+            }
+          })
+          .entries(dataCountry);
         
-        // // Path element
-        // g.append("path")
-        //   .attr("class", "line")
-        //   .attr("d", line(dataCountryList))
-        //   .style("stroke", "salmon")
-        //   .style("fill", "none");
-                   
+        //Filter data for getting only raws with more than 1000 persons
+        dataCountryList1 = dataCountry.filter(function (d){
+                                  return (d.value.amount/1000)>1;
+                                });
+
+        dataCountryList1.sort(function(x, y){
+           return d3.descending(x.value.amount, y.value.amount);
+        });
+
+        console.log(dataCountryList1);
+
+        //Filter data for getting only raws with more than 1000 persons
+        dataCountryList2 =  dataCountryAge.filter(function (d){
+                                  return (d.value.people/1000)>1;
+                                });
+
+        console.log(dataCountryList2);
+
+        //TEST
+        var genderDataList = d3.nest()
+          .key(function(d){
+            return d.Gender;
+          })
+          .entries(dataOrigin);
+        console.log(genderDataList);
+      }
+
+      //Update datasets for bar chart
+      function updateBar(){
+
+          //select new data
+          if (dataIndex==1) {
+            dataIndex=2;  
+          }
+          else{
+            dataIndex=1;
+          }
+
+          //Updata x and y axis
+
+          //1 - rejoin data
+          xaxis = g.selectAll(".xaxis");
+          
+          xaxis.exit().remove();//remove unneeded axis
+
+            var yaxis = g.selectAll(".yaxis");
+          
+          xaxis.exit().remove();//remove unneeded axis
+
+          xaxis.enter().append("xaxis")
+            .attr("class", "xaxis");
+
+           yaxis.enter().append("yaxis")
+            .attr("class", "yaxis");
+
+
+           var x = d3.scaleBand()
+            .rangeRound([0, iwidth])
+            .paddingInner(1).paddingOuter(1);
+            //.align(3);
+             // X scale definition      
+           xdom = x.domain((eval("dataCountryList"+dataIndex)).map(function(d) {
+           return d.value.isoCode; }));
+
+          // Y scale definition
+          var maxxx = d3.max(eval("dataCountryList"+dataIndex), function(d) { 
+              
+              return +d.value.amount}
+              );
+
+          var y = d3.scaleLinear()
+            .rangeRound([iheight, 0]);
+          ydom = y.domain([0, maxxx]);
+
+          //var yTickValues = yaxis.ticks();
+          //d3.select(".yaxis").call(d3.axisLeft(y).tickValues(yTickValues));
+
+        
+
+
+          //var xaxis = g.selectAll('g.xaxis');
+            //var yaxis = g.selectAll('g.yaxis');
+
+                                  // Axis x
+                 // xaxis.enter()
+            xaxis =g.append('g')
+              .attr('class', 'xaxis axis')
+                      .call(d3.axisBottom(x))
+                      .attr("transform", `translate(0,${iheight})`)
+                      .attr("class", "x.axis");
+
+                  // Axis y  
+                  //yaxis.enter()
+            yaxis =g.append('g')
+              .attr('class', 'yaxis axis')
+                      .call(d3.axisLeft(y))
+                      .append("text")
+                      .attr("fill", "#000")
+                      .attr("transform", "rotate(-90)")
+                      .attr("text-anchor", "end")
+                      .text("Number of people")
+                      .attr("class", "y.axis");
+
+
+
+          //Update bar part(rect)
+
+          //1 - rejoin data
+          var rectss = g.selectAll(".bar")
+              .data(eval("dataCountryList"+dataIndex));
+          
+          //2 - Remove bar (rect)
+          rectss.exit().remove();//remove unneeded circles
+         
+          //3 - Update bar (rect)
+          rectss.enter().append("rect")
+            .attr("class", "bar");
+
+
+          rectss.attr("x", function (d) {            
+              return x(d.value.isoCode)-barwidth/2;
+            })
+
+          rectss.attr("y", function (d) {            
+              return y(d.value.amount);
+            });
+
+          rectss.attr("width", barwidth)
+            .attr("height", function (d) {
+              return height - y(d.value.amount)-(margin.top+margin.bottom);
+            });//create any new rects needed
+
+          //Change text  
+          d3.select("p").text("Dataset "+dataIndex);
       }
     </script>
 
