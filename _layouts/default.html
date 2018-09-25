@@ -282,44 +282,28 @@
            yaxis.enter().append("yaxis")
             .attr("class", "yaxis");
 
-
-           var x = d3.scaleBand()
-            .rangeRound([0, iwidth])
-            .paddingInner(1).paddingOuter(1);
-            //.align(3);
-             // X scale definition      
-           xdom = x.domain((eval("dataCountryList"+dataIndex)).map(function(d) {
-           return d.value.isoCode; }));
+          // X scale definition
+          x = d3.scaleBand().rangeRound([0, iwidth])
+           .paddingInner(1)
+           .paddingOuter(1);
+          xdom = x.domain((eval("dataCountryList"+dataIndex)).map(function(d){return d.value.isoCode; }));
 
           // Y scale definition
-          var maxxx = d3.max(eval("dataCountryList"+dataIndex), function(d) { 
-              
-              return +d.value.amount}
-              );
-
-          var y = d3.scaleLinear()
-            .rangeRound([iheight, 0]);
-          ydom = y.domain([0, maxxx]);
-
-          //var yTickValues = yaxis.ticks();
-          //d3.select(".yaxis").call(d3.axisLeft(y).tickValues(yTickValues));
-
-        
-
-
+          y = d3.scaleLinear().rangeRound([iheight, 0]);
+          ydom = y.domain([0, d3.max(eval("dataCountryList"+dataIndex), function(d){return +d.value.amount})]);
           //var xaxis = g.selectAll('g.xaxis');
-            //var yaxis = g.selectAll('g.yaxis');
+          //var yaxis = g.selectAll('g.yaxis');
 
-                                  // Axis x
-                 // xaxis.enter()
+          // Axis x
+          // xaxis.enter()
             xaxis =g.append('g')
               .attr('class', 'xaxis axis')
                       .call(d3.axisBottom(x))
                       .attr("transform", `translate(0,${iheight})`)
                       .attr("class", "x.axis");
 
-                  // Axis y  
-                  //yaxis.enter()
+            // Axis y  
+            //yaxis.enter()
             yaxis =g.append('g')
               .attr('class', 'yaxis axis')
                       .call(d3.axisLeft(y))
@@ -330,8 +314,6 @@
                       .text("Number of people")
                       .attr("class", "y.axis");
 
-
-
           //Update bar part(rect)
 
           //1 - rejoin data
@@ -339,7 +321,7 @@
               .data(eval("dataCountryList"+dataIndex));
           
           //2 - Remove bar (rect)
-          rectss.exit().remove();//remove unneeded circles
+          rectss.exit().remove();//remove unneeded rects
          
           //3 - Update bar (rect)
           rectss.enter().append("rect")
