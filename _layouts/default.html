@@ -50,9 +50,10 @@
 
     <div id = "svgcontainer">
           <h3>Colombians registered abroad</h3>
-          <button style="padding: 10px 20px; text-align: center;font-size: 16px;margin: 4px 2px;">Switch dataset</button>
           <br/>
           <p style="color:#789410;font-size:160%">Dataset</p>
+          <p style="color:#789410;font-size:110%">Data only for countries where more than 1000 Colombians have been registered</p>
+          <button style="padding: 10px 20px; text-align: center;font-size: 16px;margin: 4px 2px;">Switch dataset</button>
     </div>
 
     <script src="https://d3js.org/d3.v5.min.js"></script>
@@ -598,7 +599,7 @@
           //Change text  
           d3.select("p").text("Dataset "+dataIndex + ": by country - " + datasetsTitles[dataIndex-1]);
       }
-      
+
     </script>
 
     <div class="wrapper">
