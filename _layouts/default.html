@@ -29,12 +29,12 @@
       text-align: center;
     }
     h3 {
-      font-size : 24px;
+      font-size : 200%;
       color:green;
       text-align: center;
     }
     .xaxis text {
-      color:green;
+      color:blue;
     }
     .yaxis text {
       color:blue;
@@ -46,9 +46,9 @@
 
     <div id = "svgcontainer">
           <h3>Colombians registered abroad</h3>
-          <button>Switch data selection</button>
+          <button style="padding: 10px 20px; text-align: center;font-size: 16px;margin: 4px 2px;">Switch dataset</button>
           <br/>
-          <p>Dataset</p>
+          <p style="color:#789410;font-size:160%">Dataset</p>
     </div>
 
     <script src="https://d3js.org/d3.v5.min.js"></script>
@@ -58,7 +58,7 @@
       // Const margin data for viz
       const width = 900;
       const height = 500;
-      const margin = {top: 40, right: 70, bottom: 50, left: 50};
+      const margin = {top: 5, right: 70, bottom: 50, left: 50};
       const iwidth = width - margin.left -margin.right;
       const iheight = height - margin.top - margin.bottom;
 
@@ -79,7 +79,8 @@
       //Dataset current index
       var dataIndex=1;
 
-      var datasetsTitles = ["Total of people", "Average age"];
+      var datasetsTitles = ["Total of people", "Average age", "Male percent", "Female percent", "No gender registered percent", "POSTGRADO - DOCTORADO", "PRIMARIA", "Children percent", "Adults percent", "Elderly people percent"];
+      var maxIndex = datasetsTitles.length;
 
       // Original ata var
       var dataOrigin;
@@ -89,6 +90,30 @@
 
       // Dataset 2
       var dataCountryList2;
+
+      // Dataset 3
+      var dataCountryList3;
+
+      // Dataset 4
+      var dataCountryList4;
+
+      // Dataset 5
+      var dataCountryList5;
+
+      // Dataset 6
+      var dataCountryList6;
+
+      // Dataset 7
+      var dataCountryList7;
+
+      // Dataset 8
+      var dataCountryList8;
+
+      // Dataset 9
+      var dataCountryList9;
+
+      // Dataset 10
+      var dataCountryList10;
 
       //Var for axis x and y
       var xDomain; 
@@ -116,7 +141,7 @@
         //var colors = ["b33040", "#d25c4d"];
 
       //Set dataset title
-        d3.select("p").text("Dataset "+dataIndex + ": " + datasetsTitles[dataIndex-1]);
+        d3.select("p").text("Dataset "+dataIndex + ": by country - " + datasetsTitles[dataIndex-1]);
 
         //Data preparation (2 datasets)
         prepareDatasets();        
@@ -230,7 +255,198 @@
             }
           })
           .entries(dataCountry);
+
+        //Nest data for getting it as (key=country, isoCode=ISO, people=total of people, amount=average age, value=other data)
+        var dataMalePercent = d3.nest()
+          .key(function(d){
+            return d.key;
+          })
+          .rollup(function(d){
+            return {
+              people : d3.sum(d, function(g){
+                return g.value.amount;
+              }),
+              amount : d3.sum(d, function(g){
+                var kk =g.value.amount;
+                return Math.trunc(d3.sum(g.value.detailByLine, function(k){
+                    if (k.Gender=="MASCULINO")
+                      return k.Quantity;
+                    else return 0;
+                })/kk*100);
+              }),
+              isoCode : d[0].value.isoCode,
+              detailByLine : d[0].value.detailByLine
+            }
+          })
+          .entries(dataCountry);
         
+        //Nest data for getting it as (key=country, isoCode=ISO, people=total of people, amount=average age, value=other data)
+        var dataFemalePercent = d3.nest()
+          .key(function(d){
+            return d.key;
+          })
+          .rollup(function(d){
+            return {
+              people : d3.sum(d, function(g){
+                return g.value.amount;
+              }),
+              amount : d3.sum(d, function(g){
+                var kk =g.value.amount;
+                return Math.trunc(d3.sum(g.value.detailByLine, function(k){
+                    if (k.Gender=="FEMENINO")
+                      return k.Quantity;
+                    else return 0;
+                })/kk*100);
+              }),
+              isoCode : d[0].value.isoCode,
+              detailByLine : d[0].value.detailByLine
+            }
+          })
+          .entries(dataCountry);
+
+        //Nest data for getting it as (key=country, isoCode=ISO, people=total of people, amount=average age, value=other data)
+        var dataNoGenderPercent = d3.nest()
+          .key(function(d){
+            return d.key;
+          })
+          .rollup(function(d){
+            return {
+              people : d3.sum(d, function(g){
+                return g.value.amount;
+              }),
+              amount : d3.sum(d, function(g){
+                var kk =g.value.amount;
+                return Math.trunc(d3.sum(g.value.detailByLine, function(k){
+                    if (k.Gender=="DESCONOCIDO")
+                      return k.Quantity;
+                    else return 0;
+                })/kk*100);
+              }),
+              isoCode : d[0].value.isoCode,
+              detailByLine : d[0].value.detailByLine
+            }
+          })
+          .entries(dataCountry);
+
+        //Nest data for getting it as (key=country, isoCode=ISO, people=total of people, amount=average age, value=other data)
+        var dataPHDpercent = d3.nest()
+          .key(function(d){
+            return d.key;
+          })
+          .rollup(function(d){
+            return {
+              people : d3.sum(d, function(g){
+                return g.value.amount;
+              }),
+              amount : d3.sum(d, function(g){
+                var kk =g.value.amount;
+                return Math.trunc(d3.sum(g.value.detailByLine, function(k){
+                    if (k.AcademicLevel=="DESCONOCIDO")
+                      return k.Quantity;
+                    else return 0;
+                })/kk*100);
+              }),
+              isoCode : d[0].value.isoCode,
+              detailByLine : d[0].value.detailByLine
+            }
+          })
+          .entries(dataCountry);
+
+        //Nest data for getting it as (key=country, isoCode=ISO, people=total of people, amount=average age, value=other data)
+        var dataPrimarypercent = d3.nest()
+          .key(function(d){
+            return d.key;
+          })
+          .rollup(function(d){
+            return {
+              people : d3.sum(d, function(g){
+                return g.value.amount;
+              }),
+              amount : d3.sum(d, function(g){
+                var kk =g.value.amount;
+                return Math.trunc(d3.sum(g.value.detailByLine, function(k){
+                    if (k.AcademicLevel=="PRIMARIA")
+                      return k.Quantity;
+                    else return 0;
+                })/kk*100);
+              }),
+              isoCode : d[0].value.isoCode,
+              detailByLine : d[0].value.detailByLine
+            }
+          })
+          .entries(dataCountry);
+
+        //Nest data for getting it as (key=country, isoCode=ISO, people=total of people, amount=average age, value=other data)
+        var dataChildpercent = d3.nest()
+          .key(function(d){
+            return d.key;
+          })
+          .rollup(function(d){
+            return {
+              people : d3.sum(d, function(g){
+                return g.value.amount;
+              }),
+              amount : d3.sum(d, function(g){
+                var kk =g.value.amount;
+                return Math.trunc(d3.sum(g.value.detailByLine, function(k){
+                    if (k.AgeGroup=="INFANTE"||k.AgeGroup=="PRIMERA INFANCIA"||k.AgeGroup=="ADOLESCENTE")
+                      return k.Quantity;
+                    else return 0;
+                })/kk*100);
+              }),
+              isoCode : d[0].value.isoCode,
+              detailByLine : d[0].value.detailByLine
+            }
+          })
+          .entries(dataCountry);
+
+          //Nest data for getting it as (key=country, isoCode=ISO, people=total of people, amount=average age, value=other data)
+        var dataAdultpercent = d3.nest()
+          .key(function(d){
+            return d.key;
+          })
+          .rollup(function(d){
+            return {
+              people : d3.sum(d, function(g){
+                return g.value.amount;
+              }),
+              amount : d3.sum(d, function(g){
+                var kk =g.value.amount;
+                return Math.trunc(d3.sum(g.value.detailByLine, function(k){
+                    if (k.AgeGroup=="ADULTO"||k.AgeGroup=="ADULTO JOVEN")
+                      return k.Quantity;
+                    else return 0;
+                })/kk*100);
+              }),
+              isoCode : d[0].value.isoCode,
+              detailByLine : d[0].value.detailByLine
+            }
+          })
+          .entries(dataCountry);
+
+          //Nest data for getting it as (key=country, isoCode=ISO, people=total of people, amount=average age, value=other data)
+        var dataAncientpercent = d3.nest()
+          .key(function(d){
+            return d.key;
+          })
+          .rollup(function(d){
+            return {
+              people : d3.sum(d, function(g){
+                return g.value.amount;
+              }),
+              amount : d3.sum(d, function(g){
+                var kk =g.value.amount;
+                return Math.trunc(d3.sum(g.value.detailByLine, function(k){
+                    if (k.AgeGroup=="ADULTO MAYOR")
+                      return k.Quantity;
+                    else return 0;
+                })/kk*100);
+              }),
+              isoCode : d[0].value.isoCode,
+              detailByLine : d[0].value.detailByLine
+            }
+          })
+          .entries(dataCountry);
         //Filter data for getting only raws with more than 1000 persons
         dataCountryList1 = dataCountry.filter(function (d){
                                   return (d.value.amount/1000)>1;
@@ -247,26 +463,108 @@
                                   return (d.value.people/1000)>1;
                                 });
 
+        dataCountryList2.sort(function(x, y){
+           return d3.ascending(x.value.amount, y.value.amount);
+        });
+
         console.log(dataCountryList2);
 
+        //Filter data for getting only raws with more than 1000 persons
+        dataCountryList3 =  dataMalePercent.filter(function (d){
+                                  return (d.value.people/1000)>1;
+                                });
+
+        dataCountryList3.sort(function(x, y){
+           return d3.ascending(x.value.amount, y.value.amount);
+        });
+
+        console.log(dataCountryList3);
+
+        //Filter data for getting only raws with more than 1000 persons
+        dataCountryList4 =  dataFemalePercent.filter(function (d){
+                                  return (d.value.people/1000)>1;
+                                });
+
+        dataCountryList4.sort(function(x, y){
+           return d3.ascending(x.value.amount, y.value.amount);
+        });
+
+        console.log(dataCountryList4);
+
+        //Filter data for getting only raws with more than 1000 persons
+        dataCountryList5 =  dataNoGenderPercent.filter(function (d){
+                                  return (d.value.people/1000)>1;
+                                });
+
+        dataCountryList5.sort(function(x, y){
+           return d3.ascending(x.value.amount, y.value.amount);
+        });
+
+        //Filter data for getting only raws with more than 1000 persons
+        dataCountryList6 =  dataPHDpercent.filter(function (d){
+                                  return (d.value.people/1000)>1;
+                                });
+
+        dataCountryList6.sort(function(x, y){
+           return d3.ascending(x.value.amount, y.value.amount);
+        });
+
+        //Filter data for getting only raws with more than 1000 persons
+        dataCountryList7 =  dataPrimarypercent.filter(function (d){
+                                  return (d.value.people/1000)>1;
+                                });
+
+        dataCountryList7.sort(function(x, y){
+           return d3.ascending(x.value.amount, y.value.amount);
+        });
+
+        //Filter data for getting only raws with more than 1000 persons
+        dataCountryList8 =  dataChildpercent.filter(function (d){
+                                  return (d.value.people/1000)>1;
+                                });
+
+        dataCountryList8.sort(function(x, y){
+           return d3.ascending(x.value.amount, y.value.amount);
+        });
+
+        //Filter data for getting only raws with more than 1000 persons
+        dataCountryList9 =  dataAdultpercent.filter(function (d){
+                                  return (d.value.people/1000)>1;
+                                });
+
+        dataCountryList9.sort(function(x, y){
+           return d3.ascending(x.value.amount, y.value.amount);
+        });
+                
+
+        //Filter data for getting only raws with more than 1000 persons
+        dataCountryList10 =  dataAncientpercent.filter(function (d){
+                                  return (d.value.people/1000)>1;
+                                });
+
+        dataCountryList10.sort(function(x, y){
+           return d3.ascending(x.value.amount, y.value.amount);
+        });
+
+        console.log(dataCountryList4);
         //TEST
-        var genderDataList = d3.nest()
-          .key(function(d){
-            return d.Gender;
-          })
-          .entries(dataOrigin);
-        console.log(genderDataList);
+        // var genderDataList = d3.nest()
+        //   .key(function(d){
+        //     return d.Gender;
+        //   })
+        //   .entries(dataOrigin);
+        // console.log(genderDataList);
       }
 
       //Update datasets for bar chart
       function updateBar(){
 
           //select new data
-          if (dataIndex==1) {
-            dataIndex=2;  
+          if (dataIndex==maxIndex) {
+            dataIndex=1;  
           }
           else{
-            dataIndex=1;
+            dataIndex++;
           }
 
           //Update x and y axis
@@ -346,7 +644,7 @@
             });//create any new rects needed
 
           //Change text  
-          d3.select("p").text("Dataset "+dataIndex + ": " + datasetsTitles[dataIndex-1]);
+          d3.select("p").text("Dataset "+dataIndex + ": by country - " + datasetsTitles[dataIndex-1]);
       }
     </script>
 
