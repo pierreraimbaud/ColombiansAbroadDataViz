@@ -1,12 +1,12 @@
-### Colombian migration : where do people go more ? And who are they ?
+## Colombian migration : where do people go more ? And who are they ?
 
-## What, why and how ? Understanding this visualization thanks to abstraction
+### What, why and how ? Understanding this visualization thanks to abstraction
 
 This visualization uses open data from data.gov.com. The aim is to show some interesting insights about this data : this is the principal objective. The other ones are more academic, like use d3 and publish the web page on githubPages. The technologies used are d3 (javascript), HTML, CSS and git (nodejs for developing with a local server). There is no specific prerequisites for enjoying the visualization neither for using the code available in github.
 
 To be more precise about these insights, in the following paragraphs we will explain what were our data (through data abstraction), why this visualization (through task abstraction) and the reason of how we choice to present the data (idioms : visual encoding and interaction) ; thanks to that, we have been able to answer to the title question : Colombian migration : where do people go more ? And who are they ?
 
-## What ?
+### What ?
 
 The dataset type is a table. The dataset availability is static because the dataset available on the website  is not modified in real-time, so we just download the file from the website and create a new file of processed data (correcting absent values and modifying the columns spaces – English names and without spaces), then we load it. Then for separating the dataset in smaller ones, and also to get derive data, we process this file in the visualization with d3.
 
@@ -20,7 +20,7 @@ After processing the data, we obtain new attributes. Each time we consider the p
 The average age, from the attribute age, which is also ordered, quantitative and sequential for the same reasons than the attribute age.
 The male rate, the female rate, the “no gender” rate, all from the attribute Gender, the PhD rate and Primary rate, from the attribute AcademicLevel, the children rate, the adult rate and the elderly adult rate, from AgeGroup attribute, which are ordered, quantitative and sequential because of being rates of an amount of people.
 
-## Why ?
+### Why ?
 
 Which tasks do we want to perform here ? 
 
@@ -35,7 +35,7 @@ In dataset 3 and 4 (Male and femal age), one task is Browse Extremes – one ins
 
 In dataset 7 (Primary rate), combining it with dataset 8 (Child rate), one insight, by doing the task Browse Extremes in dataset 7 and then Locate “the outlier” (outlier in dataset 7, not in 8) Venezuela in dataset 8,  - the two tasks together can be considered as a Compare Feature, is the fact that we can be surprised that despite being in first position for primary level education rate, Venezuela is not in the first rate, far for this, in dataset 8 about children rate. So maybe one explication is that more than in other countries, the Colombian people which have been to Venezuela do not make other studies than primary school. We could compare feature also with dataset 10, where,  Browsing the Extremes, we see that the major elderly rate is also in Venezuela so maybe there is a correlation between these data – maybe in one period of the Colombia history not so recent many people go to Venezuela and at this time the education was not so developed or that no founds for that for the migrants.
 
-## How ?
+### How ?
 
 We choose bar charts for this visualization.
 First, we have to say that for all the dataset, in the x axis, we have the country iso code attribute, which is categorical and in the y axis we have an amount or a rate, so ordered attributes.
