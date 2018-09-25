@@ -39,10 +39,13 @@
       display: none;
     }
 
+    button  {float:left}
+
     </style>
 
     <div id = "svgcontainer">
           <h3>Colombians registered abroad</h3>
+          <button>Switch data selection</button>
     </div>
 
     <script src="https://d3js.org/d3.v5.min.js"></script>
@@ -69,7 +72,8 @@
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
       var dataOrigin;
-      var dataCountryList;
+      var dataCountryList1;
+      var dataCountryList2;
 
       var tooltip ;
 
@@ -99,7 +103,38 @@
 
       function dothejob()
       {
-         
+          var dataIndex=1;
+
+        //button to swap over datasets
+            d3.select("button")
+                // .on("click",function(){
+                //     //select new data
+                //     if (dataIndex==1) {
+                //         dataIndex=2;  
+                //     } else   {
+                //         dataIndex=1;
+                //     }
+                //     //rejoin data
+                //     var circle = svgDoc.select("g").selectAll("circle")
+                //         .data(eval("dataArray"+dataIndex));
+                    
+                //     circle.exit().remove();//remove unneeded circles
+                //     circle.enter().append("circle")
+                //         .attr("r",0);//create any new circles needed
+
+                //     //update all circles to new positions
+                //     circle.transition()
+                //         .duration(500)
+                //         .attr("cx",function(d,i){
+                //             var spacing = lineLength/(eval("dataArray"+dataIndex).length);
+                //             return xBuffer+(i*spacing)
+                //         })
+                //         .attr("cy",yBuffer)
+                //         .attr("r",function(d,i){return d});
+
+                //     d3.select("text").text("dataset"+dataIndex);
+
+               // });//end click function
         var colors = ["b33040", "#d25c4d"];
 
         console.log(dataOrigin);
@@ -121,15 +156,15 @@
 
         console.log(dataCountry);
 
-        dataCountryList = dataCountry.filter(function (d){
+        dataCountryList1 = dataCountry.filter(function (d){
                                   return (d.value.amount/1000)>1;
                                 });
 
-        dataCountryList.sort(function(x, y){
-           return d3.ascending(x.value.isoCode, y.value.isoCode);
+        dataCountryList1.sort(function(x, y){
+           return d3.ascending(x.value.amount, y.value.amount);
         });
 
-        console.log(dataCountryList);
+        console.log(dataCountryList1);
 
 
         var genderDataList = d3.nest()
@@ -146,11 +181,11 @@
           .paddingInner(1).paddingOuter(1);
           //.align(3);
            // X scale definition      
-        x.domain(dataCountryList.map(function(d) {
+        x.domain(dataCountryList1.map(function(d) {
          return d.value.isoCode; }));
 
         // Y scale definition
-        var maxxx = d3.max(dataCountryList, function(d) { 
+        var maxxx = d3.max(dataCountryList1, function(d) { 
             
             return +d.value.amount}
             );
@@ -180,7 +215,7 @@
             .text("Number of people");
 
         var rect = g.selectAll(".bar")
-          .data(dataCountryList)
+          .data(dataCountryList1)
           .enter().append("rect")
           .attr("class", "bar");
 
@@ -200,8 +235,8 @@
 
         rect.on("mousemove", function(d){
               tooltip
-                .style("left", d3.event.pageX - 50 + "px")
-                .style("top", d3.event.pageY - 70 + "px")
+                .style("left", d3.event.pageX - 70 + "px")
+                .style("top", d3.event.pageY - 90 + "px")
                 .style("display", "inline-block")
                 .html(d.key + ": " +(d.value.amount));
             })
@@ -218,10 +253,8 @@
         //   .attr("d", line(dataCountryList))
         //   .style("stroke", "salmon")
         //   .style("fill", "none");
+                   
       }
-
-
-         // var dataCountryListVal = d3.set(dataOrigin.map( d => d.key )).values();
     </script>
 
     <div class="wrapper">
