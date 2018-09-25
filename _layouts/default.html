@@ -92,29 +92,19 @@
      
       function dothejob()
       {
-        var dataCountryList = d3.nest().key(function(d)
-                                                  {
-                                                      return d.Country;
-                                                    
-                                                 })
-        .rollup(function(d) { 
-   return d3.sum(d, function(g) {return g.Quantity; });
-  })
-                                            // .rollup(function(d)
-                                                   // {
-                                                          //return d3.sum(d, 
-                                                         // function(d)
-                                                        //  {
-                                                       //     return d.Cantidad_de_personas;
-                                                         // }
-                                                       //  )
-                                         
-                                                //    }
-                                               //    )
-                                            .entries(dataOrigin);
+        var dataCountryList = d3.nest()
+        .key(function(d){
+          return d.Country;
+        })
+        .rollup(function(d){
+          return d3.sum(d, function(g){
+            return g.Quantity;
+          });
+        })
+        .entries(dataOrigin);
      
         console.log(dataCountryList);
-        //debugger
+
         // X scale definition      
         x.domain(dataCountryList.map(function(d) { return d.key; }));
         y.domain([0, d3.max(dataCountryList, function(d) { return d.value; })]);
@@ -128,6 +118,7 @@
         g.append("g")
             .call(d3.axisLeft(y));
 
+        //Line
         const line = d3.line()
           .x( d=> x(d.key))
           .y( d=> y(d.value));
