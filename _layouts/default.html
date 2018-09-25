@@ -12,12 +12,15 @@
   <body>
 
     <style>
+
     .bar {
       fill: steelblue;
     }
+
     .bar:hover {
       fill: brown;
     }
+
     .toolTip {
       position: absolute;
       display: none;
@@ -28,20 +31,21 @@
       padding: 14px;
       text-align: center;
     }
+
     h3 {
       font-size : 200%;
       color:green;
       text-align: center;
     }
+
     .xaxis text {
       color:blue;
     }
+
     .yaxis text {
       color:blue;
     }
-    /*.xaxis path {
-      display: none;
-    }*/
+
     </style>
 
     <div id = "svgcontainer">
@@ -63,13 +67,14 @@
       const iheight = height - margin.top - margin.bottom;
 
       // Const bar chart
-      const barwidth = 26;
+      const barwidth = 20;
 
       // SVG and g elements
       var svg = d3.select("#svgcontainer")
           .append("svg")
           .attr("width", iwidth + margin.left + margin.right)
           .attr("height", iheight + margin.top + margin.bottom);
+
       var g = svg.append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -80,48 +85,17 @@
       var dataIndex=1;
 
       var datasetsTitles = ["Total of people", "Average age", "Male percent", "Female percent", "No gender registered percent", "PhD level of study percent", "Primary level of study percent", "Children percent", "Adults percent", "Elderly people percent"];
+
       var maxIndex = datasetsTitles.length;
 
       // Original ata var
       var dataOrigin;
 
-      // Dataset 1
-      var dataCountryList1;
-
-      // Dataset 2
-      var dataCountryList2;
-
-      // Dataset 3
-      var dataCountryList3;
-
-      // Dataset 4
-      var dataCountryList4;
-
-      // Dataset 5
-      var dataCountryList5;
-
-      // Dataset 6
-      var dataCountryList6;
-
-      // Dataset 7
-      var dataCountryList7;
-
-      // Dataset 8
-      var dataCountryList8;
-
-      // Dataset 9
-      var dataCountryList9;
-
-      // Dataset 10
-      var dataCountryList10;
+      // Dataset 1,2,3,4,5,6,7,8,9,10
+      var dataCountryList1, dataCountryList2, dataCountryList3, dataCountryList4, dataCountryList5, dataCountryList6, dataCountryList7, dataCountryList8, dataCountryList9, dataCountryList10;
 
       //Var for axis x and y
-      var xDomain; 
-      var yDomain
-      var xaxis; 
-      var yaxis; 
-      var x;
-      var y;
+      var xDomain, yDomain, xaxis, yaxis, x, y;
 
       // Load csv with promise
       d3.csv('https://raw.githubusercontent.com/pierreraimbaud/ColombiansAbroadViz/master/Colombianos_registrados_en_el_exterior.csv').then(function(data) {
@@ -138,9 +112,7 @@
       //Create bar chart
       function createBar(){
 
-        //var colors = ["b33040", "#d25c4d"];
-
-      //Set dataset title
+        //Set dataset title
         d3.select("p").text("Dataset "+dataIndex + ": by country - " + datasetsTitles[dataIndex-1]);
 
         //Data preparation (2 datasets)
@@ -151,7 +123,6 @@
 
         //Create Bar chart (rect)
         addBarCharRects();
-                
       }
 
       //Add the axis for bar chart
@@ -161,11 +132,13 @@
         x = d3.scaleBand().rangeRound([0, iwidth])
           .paddingInner(1)
           .paddingOuter(1);
+
         x.domain((eval("dataCountryList"+dataIndex)).map(function(d){
          return d.value.isoCode;}));
 
         // Y scale definition
         y = d3.scaleLinear().rangeRound([iheight, 0]);
+
         y.domain([0, d3.max(eval("dataCountryList"+dataIndex), function(d){
             return +d.value.amount})]);
 
@@ -177,23 +150,19 @@
 
         // Axis y  
         yaxis = g.append('g').attr('class', 'yaxis')
-            .call(d3.axisLeft(y))
-            // .append("text")
-            // .attr("fill", "#000")
-            // .attr("transform", "rotate(-90)")
-            // .attr("text-anchor", "end")
-            // .text("Number of people")
-            // .attr("class", "yaxis");
+            .call(d3.axisLeft(y));
       }
 
       //Add the rect (bar chart)
       function addBarCharRects(){
+
+        //Add rect
         var rect = g.selectAll(".bar")
           .data(eval("dataCountryList"+dataIndex))
           .enter().append("rect")
           .attr("class", "bar");
 
-
+        //Add rect attributes
         var attrX = rect.attr("x", function (d) {
               return x(d.value.isoCode)-barwidth/2;
             })
@@ -207,6 +176,7 @@
               return height - y(d.value.amount)-(margin.top+margin.bottom);
             });
 
+        //Add rect mouse event
         rect.on("mousemove", function(d){
               tooltip
                 .style("left", d3.event.pageX - 70 + "px")
@@ -216,6 +186,7 @@
             })
             .on("mouseout", function(d){ tooltip.style("display", "none");});   
       }
+
       //Prepare datasets for bar chart
       function prepareDatasets(){
 
@@ -247,8 +218,8 @@
               }),
               amount : d3.sum(d, function(g){
                 var kk =g.value.amount;
-                return d3.sum(g.value.detailByLine, function(k){
-                    return k.Age;})/kk;
+                return Math.trunc(d3.sum(g.value.detailByLine, function(k){
+                    return k.Age;})/kk);
               }),
               isoCode : d[0].value.isoCode,
               detailByLine : d[0].value.detailByLine
@@ -256,7 +227,7 @@
           })
           .entries(dataCountry);
 
-        //Nest data for getting it as (key=country, isoCode=ISO, people=total of people, amount=average age, value=other data)
+        //Nest data for getting it as (key=country, isoCode=ISO, people=total of man, amount=average age, value=other data)
         var dataMalePercent = d3.nest()
           .key(function(d){
             return d.key;
@@ -280,7 +251,7 @@
           })
           .entries(dataCountry);
         
-        //Nest data for getting it as (key=country, isoCode=ISO, people=total of people, amount=average age, value=other data)
+        //Nest data for getting it as (key=country, isoCode=ISO, people=total of woman, amount=average age, value=other data)
         var dataFemalePercent = d3.nest()
           .key(function(d){
             return d.key;
@@ -304,7 +275,7 @@
           })
           .entries(dataCountry);
 
-        //Nest data for getting it as (key=country, isoCode=ISO, people=total of people, amount=average age, value=other data)
+        //Nest data for getting it as (key=country, isoCode=ISO, people=total of people with no info about gender, amount=average age, value=other data)
         var dataNoGenderPercent = d3.nest()
           .key(function(d){
             return d.key;
@@ -328,7 +299,7 @@
           })
           .entries(dataCountry);
 
-        //Nest data for getting it as (key=country, isoCode=ISO, people=total of people, amount=average age, value=other data)
+        //Nest data for getting it as (key=country, isoCode=ISO, people=total of people with PhD, amount=average age, value=other data)
         var dataPHDpercent = d3.nest()
           .key(function(d){
             return d.key;
@@ -352,7 +323,7 @@
           })
           .entries(dataCountry);
 
-        //Nest data for getting it as (key=country, isoCode=ISO, people=total of people, amount=average age, value=other data)
+        //Nest data for getting it as (key=country, isoCode=ISO, people=total of people with max level of study:primary, amount=average age, value=other data)
         var dataPrimarypercent = d3.nest()
           .key(function(d){
             return d.key;
@@ -376,7 +347,7 @@
           })
           .entries(dataCountry);
 
-        //Nest data for getting it as (key=country, isoCode=ISO, people=total of people, amount=average age, value=other data)
+        //Nest data for getting it as (key=country, isoCode=ISO, people=total of children, amount=average age, value=other data)
         var dataChildpercent = d3.nest()
           .key(function(d){
             return d.key;
@@ -400,7 +371,7 @@
           })
           .entries(dataCountry);
 
-          //Nest data for getting it as (key=country, isoCode=ISO, people=total of people, amount=average age, value=other data)
+          //Nest data for getting it as (key=country, isoCode=ISO, people=total of adult, amount=average age, value=other data)
         var dataAdultpercent = d3.nest()
           .key(function(d){
             return d.key;
@@ -424,7 +395,7 @@
           })
           .entries(dataCountry);
 
-          //Nest data for getting it as (key=country, isoCode=ISO, people=total of people, amount=average age, value=other data)
+          //Nest data for getting it as (key=country, isoCode=ISO, people=total of elderly people, amount=average age, value=other data)
         var dataAncientpercent = d3.nest()
           .key(function(d){
             return d.key;
@@ -447,6 +418,7 @@
             }
           })
           .entries(dataCountry);
+
         //Filter data for getting only raws with more than 1000 persons
         dataCountryList1 = dataCountry.filter(function (d){
                                   return (d.value.amount/1000)>1;
@@ -543,7 +515,7 @@
       function updateBar(){
 
           //select new data
-          if (dataIndex==maxIndex) {
+          if (dataIndex==maxIndex){
             dataIndex=1;  
           }
           else{
@@ -555,26 +527,28 @@
           //1 - rejoin data
           xaxis = g.selectAll(".xaxis");
           
+          //2 - Remove axis
           xaxis.exit().remove();//remove unneeded axis
 
             var yaxis = g.selectAll(".yaxis");
           
           xaxis.exit().remove();//remove unneeded axis
 
+          //3 - Update axis
           xaxis.enter().append("xaxis")
             .attr("class", "xaxis");
 
            yaxis.enter().append("yaxis")
             .attr("class", "yaxis");
 
-          // X scale definition
+          // X scale
           x = d3.scaleBand().rangeRound([0, iwidth])
            .paddingInner(1)
            .paddingOuter(1);
           xDomain = (eval("dataCountryList"+dataIndex)).map(function(d){return d.value.isoCode; });
           x.domain(xDomain);
 
-          // Y scale definition
+          // Y scale
           y = d3.scaleLinear().rangeRound([iheight, 0]);
           yDomain = [0, d3.max(eval("dataCountryList"+dataIndex), function(d){return +d.value.amount})];
           y.domain(yDomain);
@@ -593,11 +567,6 @@
           yaxis.enter().append("g");
 
           yaxis.attr('class', 'yaxis').call(d3.axisLeft(y));
-          // yaxis.append("text")
-          //           .attr("fill", "#548")
-          //           .attr("transform", "rotate(-90)")
-          //           .attr("text-anchor", "end")
-          //           .text("Average age");
 
           //Update bar part(rect)
 
@@ -622,13 +591,14 @@
             });
 
           rectss.attr("width", barwidth)
-            .attr("height", function (d) {
-              return height - y(d.value.amount)-(margin.top+margin.bottom);
-            });//create any new rects needed
+                .attr("height", function (d) {
+                  return height - y(d.value.amount)-(margin.top+margin.bottom);
+                });//create any new rects needed
 
           //Change text  
           d3.select("p").text("Dataset "+dataIndex + ": by country - " + datasetsTitles[dataIndex-1]);
       }
+      
     </script>
 
     <div class="wrapper">
