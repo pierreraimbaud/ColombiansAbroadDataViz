@@ -33,16 +33,22 @@
       color:green;
       text-align: center;
     }
-    .axis--x path {
-      display: none;
+    .xaxis text {
+      color:green;
     }
+    .yaxis text {
+      color:blue;
+    }
+    /*.xaxis path {
+      display: none;
+    }*/
     </style>
 
     <div id = "svgcontainer">
           <h3>Colombians registered abroad</h3>
           <button>Switch data selection</button>
           <br/>
-          <p>Dataset 1</p>
+          <p>Dataset</p>
     </div>
 
     <script src="https://d3js.org/d3.v5.min.js"></script>
@@ -73,6 +79,8 @@
       //Dataset current index
       var dataIndex=1;
 
+      var datasetsTitles = ["Total of people", "Average age"];
+
       // Original ata var
       var dataOrigin;
 
@@ -83,8 +91,8 @@
       var dataCountryList2;
 
       //Var for axis x and y
-      var xdom; 
-      var ydom; 
+      var xDomain; 
+      var yDomain
       var xaxis; 
       var yaxis; 
       var x;
@@ -107,8 +115,11 @@
 
         //var colors = ["b33040", "#d25c4d"];
 
+      //Set dataset title
+        d3.select("p").text("Dataset "+dataIndex + ": " + datasetsTitles[dataIndex-1]);
+
         //Data preparation (2 datasets)
-        prepareDatasets();
+        prepareDatasets();        
 
         //Create Axis
         addAxisForBarChar();
@@ -121,40 +132,33 @@
       //Add the axis for bar chart
       function addAxisForBarChar(){
 
-        // var xaxis = g.selectAll('g.xaxis')
-        //   //.data(xdom)
-        //   .enter();
-        // var yaxis = g.selectAll('g.yaxis')
-        //   //.data(ydom)
-        //   .enter();
-
         // X scale definition
         x = d3.scaleBand().rangeRound([0, iwidth])
           .paddingInner(1)
           .paddingOuter(1);
-        xdom = x.domain((eval("dataCountryList"+dataIndex)).map(function(d){
+        x.domain((eval("dataCountryList"+dataIndex)).map(function(d){
          return d.value.isoCode;}));
 
         // Y scale definition
         y = d3.scaleLinear().rangeRound([iheight, 0]);
-        ydom = y.domain([0, d3.max(eval("dataCountryList"+dataIndex), function(d){
+        y.domain([0, d3.max(eval("dataCountryList"+dataIndex), function(d){
             return +d.value.amount})]);
 
         // Axis x
         xaxis = g.append('g').attr('class', 'xaxis')
             .call(d3.axisBottom(x))
             .attr("transform", `translate(0,${iheight})`)
-            .attr("class", "x.axis");
+            .attr("class", "xaxis");
 
         // Axis y  
         yaxis = g.append('g').attr('class', 'yaxis')
             .call(d3.axisLeft(y))
-            .append("text")
-            .attr("fill", "#000")
-            .attr("transform", "rotate(-90)")
-            .attr("text-anchor", "end")
-            .text("Number of people")
-            .attr("class", "y.axis");
+            // .append("text")
+            // .attr("fill", "#000")
+            // .attr("transform", "rotate(-90)")
+            // .attr("text-anchor", "end")
+            // .text("Number of people")
+            // .attr("class", "yaxis");
       }
 
       //Add the rect (bar chart)
@@ -286,33 +290,33 @@
           x = d3.scaleBand().rangeRound([0, iwidth])
            .paddingInner(1)
            .paddingOuter(1);
-          xdom = x.domain((eval("dataCountryList"+dataIndex)).map(function(d){return d.value.isoCode; }));
+          xDomain = (eval("dataCountryList"+dataIndex)).map(function(d){return d.value.isoCode; });
+          x.domain(xDomain);
 
           // Y scale definition
           y = d3.scaleLinear().rangeRound([iheight, 0]);
-          ydom = y.domain([0, d3.max(eval("dataCountryList"+dataIndex), function(d){return +d.value.amount})]);
-          //var xaxis = g.selectAll('g.xaxis');
-          //var yaxis = g.selectAll('g.yaxis');
-
+          yDomain = [0, d3.max(eval("dataCountryList"+dataIndex), function(d){return +d.value.amount})];
+          y.domain(yDomain);
+         
           // Axis x
-          // xaxis.enter()
-            xaxis =g.append('g')
-              .attr('class', 'xaxis axis')
-                      .call(d3.axisBottom(x))
-                      .attr("transform", `translate(0,${iheight})`)
-                      .attr("class", "x.axis");
+          xaxis =g.selectAll(".xaxis").data(xDomain);
+          xaxis.exit().remove();//remove unneeded rects
+          xaxis.enter().append("g");
 
-            // Axis y  
-            //yaxis.enter()
-            yaxis =g.append('g')
-              .attr('class', 'yaxis axis')
-                      .call(d3.axisLeft(y))
-                      .append("text")
-                      .attr("fill", "#000")
-                      .attr("transform", "rotate(-90)")
-                      .attr("text-anchor", "end")
-                      .text("Number of people")
-                      .attr("class", "y.axis");
+          xaxis.attr('class', 'xaxis').call(d3.axisBottom(x));
+          xaxis.attr("transform", `translate(0,${iheight})`)
+
+          // Axis y  
+          yaxis =g.selectAll(".yaxis").data(yDomain);
+          yaxis.exit().remove();//remove unneeded rects
+          yaxis.enter().append("g");
+
+          yaxis.attr('class', 'yaxis').call(d3.axisLeft(y));
+          // yaxis.append("text")
+          //           .attr("fill", "#548")
+          //           .attr("transform", "rotate(-90)")
+          //           .attr("text-anchor", "end")
+          //           .text("Average age");
 
           //Update bar part(rect)
 
@@ -342,7 +346,7 @@
             });//create any new rects needed
 
           //Change text  
-          d3.select("p").text("Dataset "+dataIndex);
+          d3.select("p").text("Dataset "+dataIndex + ": " + datasetsTitles[dataIndex-1]);
       }
     </script>
 
