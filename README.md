@@ -4,6 +4,10 @@
 Pierre Raimbaud : https://github.com/pierreraimbaud
 && Projet page : https://pierreraimbaud.github.io/ColombiansAbroadViz/
 
+This project is under MIT license.
+
+![Colombian migration](Col_mig_data.jpg)
+
 ### Prerequisites, technologies
 This visualization uses open data from data.gov.com. The aim is to show some interesting insights about this data : this is the principal objective. The other ones are more academic, like use d3 and publish the web page on githubPages. The technologies used are d3 (javascript), HTML, CSS and git (nodejs for developing with a local server). There is no specific prerequisites for enjoying the visualization neither for using the code available in github.
 
