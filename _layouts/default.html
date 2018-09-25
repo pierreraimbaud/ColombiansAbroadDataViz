@@ -32,9 +32,14 @@
       text-align: center;
     }
 
+    h2 {
+      font-size : 150%;
+      color:#489450;
+    }
+
     h3 {
       font-size : 200%;
-      color:green;
+      color:#696969;
       text-align: center;
     }
 
@@ -46,22 +51,57 @@
       color:blue;
     }
 
+    #svgcontainer {
+    display: inline-block;
+    }
+
+    #explcontainer {
+        display: inline-block;
+    }
+
     </style>
+    
+    <h3>Colombians registered abroad</h3>
+    <div id="wrapper">
 
-    <div id = "svgcontainer">
-          <h3>Colombians registered abroad</h3>
-          <br/>
-          <p style="color:#789410;font-size:160%">Dataset</p>
-          <p style="color:#789410;font-size:110%">Data only for countries where more than 1000 Colombians have been registered</p>
-          <button style="padding: 10px 20px; text-align: center;font-size: 16px;margin: 4px 2px;">Switch dataset</button>
+      <div id = "svgcontainer">
+            <br/>
+            <h2>Dataset</h2>
+            <p style="color:#789410;font-size:110%">Data only for countries where more than 1000 Colombians have been registered</p>
+            <button style="padding: 10px 20px; text-align: center;font-size: 16px;margin: 4px 2px;">Switch dataset</button>
+      </div>
+
+       <div id = "explcontainer">
+            <h2>Colombians registered abroad</h2>
+            <p style="color:#789410;font-size:130%">lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem</p>
+            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
+            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
+            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
+            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
+            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
+            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
+            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
+            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
+            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
+            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
+            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
+            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
+            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
+            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
+            <p style="color:#111111;">lorem ipsumlorem ipsumlorem ipsum</p>
+
+
+      </div>
+
     </div>
-
+    <p style="font-size:90%">The data used come from the Colombian open data website - direct link <a href="https://www.datos.gov.co/Estad-sticas-Nacionales/Colombianos-registrados-en-el-exterior/y399-rzwf">here</a></p>
+    <p style="font-size:90%">This project is under <a href="https://opensource.org/licenses/MIT">MIT license.</a></p>
     <script src="https://d3js.org/d3.v5.min.js"></script>
 
     <script>
 
       // Const margin data for viz
-      const width = 900;
+      const width = 850;
       const height = 500;
       const margin = {top: 5, right: 70, bottom: 50, left: 50};
       const iwidth = width - margin.left -margin.right;
@@ -114,7 +154,7 @@
       function createBar(){
 
         //Set dataset title
-        d3.select("p").text("Dataset "+dataIndex + ": by country - " + datasetsTitles[dataIndex-1]);
+        d3.select("h2").text("Dataset "+dataIndex + ": by country - " + datasetsTitles[dataIndex-1]);
 
         //Data preparation (2 datasets)
         prepareDatasets();        
@@ -604,15 +644,14 @@
 
     <div class="wrapper">
       <header>
-        <h1><a href="">auto-link</a></h1>
-        <p></p>
+        <p><a href="">Link of this page - for sharing for example</a></p>
         <p class="view"><a href="https://github.com/pierreraimbaud/ColombiansAbroadViz">Project URL on GitHub <small>pierreraimbaud/ColombiansAbroadViz</small></a></p>
       </header>
-      <section>MD zone</section>
+      <section>
+        <a style="font-size:90%" href="https://github.com/pierreraimbaud/ColombiansAbroadViz#markdown">Markdown link</a>
+      </section>
       <footer>
-        
-        <p>This project is maintained by <a href="https://github.com/pierreraimbaud">pierreraimbaud</a></p>
-        
+        <p>Author and link : this project is maintained by <a href="https://github.com/pierreraimbaud">pierreraimbaud</a></p>
         <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
       </footer>
     </div>
