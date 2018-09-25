@@ -79,7 +79,7 @@
       //Dataset current index
       var dataIndex=1;
 
-      var datasetsTitles = ["Total of people", "Average age", "Male percent", "Female percent", "No gender registered percent", "POSTGRADO - DOCTORADO", "PRIMARIA", "Children percent", "Adults percent", "Elderly people percent"];
+      var datasetsTitles = ["Total of people", "Average age", "Male percent", "Female percent", "No gender registered percent", "PhD level of study percent", "Primary level of study percent", "Children percent", "Adults percent", "Elderly people percent"];
       var maxIndex = datasetsTitles.length;
 
       // Original ata var
@@ -456,8 +456,6 @@
            return d3.descending(x.value.amount, y.value.amount);
         });
 
-        console.log(dataCountryList1);
-
         //Filter data for getting only raws with more than 1000 persons
         dataCountryList2 =  dataCountryAge.filter(function (d){
                                   return (d.value.people/1000)>1;
@@ -466,8 +464,6 @@
         dataCountryList2.sort(function(x, y){
            return d3.ascending(x.value.amount, y.value.amount);
         });
-
-        console.log(dataCountryList2);
 
         //Filter data for getting only raws with more than 1000 persons
         dataCountryList3 =  dataMalePercent.filter(function (d){
@@ -478,8 +474,6 @@
            return d3.ascending(x.value.amount, y.value.amount);
         });
 
-        console.log(dataCountryList3);
-
         //Filter data for getting only raws with more than 1000 persons
         dataCountryList4 =  dataFemalePercent.filter(function (d){
                                   return (d.value.people/1000)>1;
@@ -488,8 +482,6 @@
         dataCountryList4.sort(function(x, y){
            return d3.ascending(x.value.amount, y.value.amount);
         });
-
-        console.log(dataCountryList4);
 
         //Filter data for getting only raws with more than 1000 persons
         dataCountryList5 =  dataNoGenderPercent.filter(function (d){
@@ -545,15 +537,6 @@
         dataCountryList10.sort(function(x, y){
            return d3.ascending(x.value.amount, y.value.amount);
         });
-
-        console.log(dataCountryList4);
-        //TEST
-        // var genderDataList = d3.nest()
-        //   .key(function(d){
-        //     return d.Gender;
-        //   })
-        //   .entries(dataOrigin);
-        // console.log(genderDataList);
       }
 
       //Update datasets for bar chart
