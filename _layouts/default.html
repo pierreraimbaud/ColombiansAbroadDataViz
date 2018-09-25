@@ -87,6 +87,8 @@
       var ydom; 
       var xaxis; 
       var yaxis; 
+      var x;
+      var y;
 
       // Load csv with promise
       d3.csv('https://raw.githubusercontent.com/pierreraimbaud/ColombiansAbroadViz/master/Colombianos_registrados_en_el_exterior.csv').then(function(data) {
@@ -94,39 +96,33 @@
           //Create bar chart
           createBar();
       });
-     
+
+      //button to swap over datasets
+      d3.select("button").on("click",function(){
+          updateBar();
+      });//end click function
+
       //Create bar chart
       function createBar(){
 
-        //button to swap over datasets
-        d3.select("button").on("click",function(){
-          updateBar();
-        });//end click function
+
 
         //var colors = ["b33040", "#d25c4d"];
 
         //Data preparation (2 datasets)
         prepareDatasets();
 
+        //Create Axis
+        addAxisForBarChar();
 
-        var x = d3.scaleBand()
-          .rangeRound([0, iwidth])
-          .paddingInner(1).paddingOuter(1);
-          //.align(3);
-           // X scale definition      
-        xdom = x.domain((eval("dataCountryList"+dataIndex)).map(function(d) {
-         return d.value.isoCode; }));
+        //Create Bar chart (rect)
+        addBarCharRects();
+                
+      }
 
-        // Y scale definition
-        var maxxx = d3.max(eval("dataCountryList"+dataIndex), function(d) { 
-            
-            return +d.value.amount}
-            );
+      //Add the axis for bar chart
+      function addAxisForBarChar(){
 
-        var y = d3.scaleLinear()
-          .rangeRound([iheight, 0]);
-        ydom = y.domain([0, maxxx]);
-        
         // var xaxis = g.selectAll('g.xaxis')
         //   //.data(xdom)
         //   .enter();
@@ -134,7 +130,19 @@
         //   //.data(ydom)
         //   .enter();
 
-       // Axis x
+        // X scale definition
+        x = d3.scaleBand().rangeRound([0, iwidth])
+          .paddingInner(1)
+          .paddingOuter(1);
+        xdom = x.domain((eval("dataCountryList"+dataIndex)).map(function(d){
+         return d.value.isoCode;}));
+
+        // Y scale definition
+        y = d3.scaleLinear().rangeRound([iheight, 0]);
+        ydom = y.domain([0, d3.max(eval("dataCountryList"+dataIndex), function(d){
+            return +d.value.amount})]);
+
+        // Axis x
         xaxis = g.append('g').attr('class', 'xaxis')
             .call(d3.axisBottom(x))
             .attr("transform", `translate(0,${iheight})`)
@@ -149,7 +157,10 @@
             .attr("text-anchor", "end")
             .text("Number of people")
             .attr("class", "y.axis");
+      }
 
+      //Add the rect (bar chart)
+      function addBarCharRects(){
         var rect = g.selectAll(".bar")
           .data(eval("dataCountryList"+dataIndex))
           .enter().append("rect")
@@ -176,9 +187,8 @@
                 .style("display", "inline-block")
                 .html(d.key + ": " +(d.value.amount));
             })
-            .on("mouseout", function(d){ tooltip.style("display", "none");});                   
+            .on("mouseout", function(d){ tooltip.style("display", "none");});   
       }
-
       //Prepare datasets for bar chart
       function prepareDatasets(){
 
