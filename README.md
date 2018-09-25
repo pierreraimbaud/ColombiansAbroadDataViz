@@ -1,8 +1,12 @@
 ## Colombian migration : where do people go more ? And who are they ?
 
-### What, why and how ? Understanding this visualization thanks to abstraction
+## Author
+Pierre Raimbaud
 
+## Prerequisites, technologies
 This visualization uses open data from data.gov.com. The aim is to show some interesting insights about this data : this is the principal objective. The other ones are more academic, like use d3 and publish the web page on githubPages. The technologies used are d3 (javascript), HTML, CSS and git (nodejs for developing with a local server). There is no specific prerequisites for enjoying the visualization neither for using the code available in github.
+
+### What, why and how ? Understanding this visualization thanks to abstraction
 
 To be more precise about these insights, in the following paragraphs we will explain what were our data (through data abstraction), why this visualization (through task abstraction) and the reason of how we choice to present the data (idioms : visual encoding and interaction) ; thanks to that, we have been able to answer to the title question : Colombian migration : where do people go more ? And who are they ?
 
