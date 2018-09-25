@@ -64,7 +64,7 @@
       d3.select('h3').style('color', 'green');
       d3.select('h3').style('font-size', '24px');
 
-  // SVG and g elements
+      // SVG and g elements
       var svg = d3.select("#svgcontainer")
           .append("svg")
           .attr("width", iwidth + margin.left + margin.right)
@@ -78,26 +78,10 @@
 
       var tooltip ;
 
-var xdom; 
-var ydom; 
-var xaxis; 
-var yaxis; 
-
-      // var promise1 = new Promise(function(resolve, reject) {
-      //   d3.csv('https://raw.githubusercontent.com/pierreraimbaud/ColombiansAbroadViz/master/GroupByCountryFile.csv', function(dataOrigin) {
-      //     console.log(dataOrigin);
-      //      dataCountryList = dataOrigin;
-      //      //debugger
-      //   });
-      // });
-
-      // promise1.then(function(value) {
-      //   console.log(value);
-      //   debugger
-      //   dothejob();
-      // // expected output: "Success!"
-      // });
-
+      var xdom; 
+      var ydom; 
+      var xaxis; 
+      var yaxis; 
 
       d3.csv('https://raw.githubusercontent.com/pierreraimbaud/ColombiansAbroadViz/master/Colombianos_registrados_en_el_exterior.csv').then(function(data) {
           console.log(data);
@@ -118,10 +102,10 @@ var yaxis;
                      //select new data
                     if (dataIndex==1) {
                         dataIndex=2;  
-                    } else   {
+                    }
+                    else   {
                         dataIndex=1;
                     }
-
 
                     //rejoin data
                     var rectss = g.selectAll(".bar")
@@ -165,8 +149,8 @@ var yaxis;
                       .rangeRound([iheight, 0]);
                     ydom = y.domain([0, maxxx]);
 
-//var yTickValues = yaxis.ticks();
-//d3.select(".yaxis").call(d3.axisLeft(y).tickValues(yTickValues));
+                    //var yTickValues = yaxis.ticks();
+                    //d3.select(".yaxis").call(d3.axisLeft(y).tickValues(yTickValues));
 
                     var attrX = rectss.attr("x", function (d) {
                       
@@ -184,28 +168,28 @@ var yaxis;
                       });//create any new circles needed
 
 
-//var xaxis = g.selectAll('g.xaxis');
-  //var yaxis = g.selectAll('g.yaxis');
+                    //var xaxis = g.selectAll('g.xaxis');
+                      //var yaxis = g.selectAll('g.yaxis');
 
-                        // Axis x
-       // xaxis.enter()
-  xaxis =g.append('g')
-    .attr('class', 'xaxis axis')
-            .call(d3.axisBottom(x))
-            .attr("transform", `translate(0,${iheight})`)
-            .attr("class", "x.axis");
+                                            // Axis x
+                           // xaxis.enter()
+                      xaxis =g.append('g')
+                        .attr('class', 'xaxis axis')
+                                .call(d3.axisBottom(x))
+                                .attr("transform", `translate(0,${iheight})`)
+                                .attr("class", "x.axis");
 
-        // Axis y  
-        //yaxis.enter()
-  yaxis =g.append('g')
-    .attr('class', 'yaxis axis')
-            .call(d3.axisLeft(y))
-            .append("text")
-            .attr("fill", "#000")
-            .attr("transform", "rotate(-90)")
-            .attr("text-anchor", "end")
-            .text("Number of people")
-            .attr("class", "y.axis");
+                            // Axis y  
+                            //yaxis.enter()
+                      yaxis =g.append('g')
+                        .attr('class', 'yaxis axis')
+                                .call(d3.axisLeft(y))
+                                .append("text")
+                                .attr("fill", "#000")
+                                .attr("transform", "rotate(-90)")
+                                .attr("text-anchor", "end")
+                                .text("Number of people")
+                                .attr("class", "y.axis");
                     //update all circles to new positions
                     // rectss.transition()
                     //     .duration(500)
@@ -219,6 +203,7 @@ var yaxis;
                      d3.select("p").text("Dataset "+dataIndex);
 
                 });//end click function
+
         var colors = ["b33040", "#d25c4d"];
 
         console.log(dataOrigin);
@@ -229,8 +214,8 @@ var yaxis;
         })
         .rollup(function(d){
           return {
-          amount : d3.sum(d, function(g){
-            return g.Quantity;
+            amount : d3.sum(d, function(g){
+              return g.Quantity;
           }),
           isoCode : d[0].ISOCode,
           detailByLine : d
