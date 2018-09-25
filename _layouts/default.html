@@ -20,9 +20,14 @@
       fill: steelblue;
     }
 
-/*    .bar:hover {
+    .bar:hover {
       fill: brown;
-    }*/
+    }
+    .bar x {
+  fill: red;
+  font: 10px sans-serif;
+  text-anchor: end;
+}
     .toolTip {
       position: absolute;
       display: none;
@@ -49,8 +54,8 @@
     <script>
 
       // Margin data for viz
-      const width = 800;
-      const height = 400;
+      const width = 900;
+      const height = 500;
       const margin = {top: 40, right: 70, bottom: 50, left: 50};
       const iwidth = width - margin.left -margin.right;
       const iheight = height - margin.top - margin.bottom;
@@ -106,26 +111,39 @@
 
       function dothejob()
       {
-        var dataCountryList = d3.nest()
+        console.log(dataOrigin);
+
+        var dataCountry = d3.nest()
         .key(function(d){
           return d.Country;
         })
         .rollup(function(d){
-          return d3.sum(d, function(g){
+          return {
+          amount : d3.sum(d, function(g){
             return g.Quantity;
-          });
+          }),
+          isoCode : d[0].ISOCode,
+          detailByLine : d
+          }
         })
         .entries(dataOrigin);
 
+        console.log(dataCountry);
+
+        dataCountryList = dataCountry.filter(function (d){
+                                  return d.value.amount>49;
+                                });
+
         dataCountryList.sort(function(x, y){
-           return d3.ascending(x.value, y.value);
+           return d3.ascending(x.value.isoCode, y.value.isoCode);
         });
 
         console.log(dataCountryList);
 
         // X scale definition      
-        x.domain(dataCountryList.map(function(d) { return d.key; }));
-        y.domain([0, d3.max(dataCountryList, function(d) { return d.value; })]);
+        x.domain(dataCountryList.map(function(d) { return d.value.isoCode; }));
+       // .attr("transform", "rotate(-90)");
+        y.domain([0, d3.max(dataCountryList, function(d) { return d.value.amount; })]);
 
         // Axis x
         g.append("g")
@@ -143,28 +161,37 @@
             .attr("text-anchor", "end")
             .text("Number of people");
 
-        g.selectAll(".bar")
+        var rect = g.selectAll(".bar")
           .data(dataCountryList)
           .enter().append("rect")
-          .attr("class", "bar")
-          .attr("x", function (d) {
-            return x(d.key);
-          })
-          .attr("y", function (d) {
-            return y(d.value)-(margin.top+margin.bottom);
-          })
-          .attr("width", 2)
-          .attr("height", function (d) {
-            return height - y(d.value);
-          })
-          .on("mousemove", function(d){
-            tooltip
-              .style("left", d3.event.pageX - 50 + "px")
-              .style("top", d3.event.pageY - 70 + "px")
-              .style("display", "inline-block")
-              .html("" (d.value));
-          })
-          .on("mouseout", function(d){ tooltip.style("display", "none");});
+          .attr("class", "bar");
+
+        var attrX = rect.attr("x", function (d) {
+              return x(d.value.isoCode);
+            })
+
+        var attrY = rect.attr("y", function (d) {
+              return y(d.value.amount)-(margin.top+margin.bottom);
+            });
+
+        rect.attr("width", 10)
+            .attr("height", function (d) {
+              return height - y(d.value.amount);
+            });
+
+        rect.on("mousemove", function(d){
+                          // console.log (height - y(d.value.amount));
+                          // console.log (height);
+                          // console.log (y(d.value.amount));
+                          // console.log (d.value.amount);
+
+              tooltip
+                .style("left", d3.event.pageX - 50 + "px")
+                .style("top", d3.event.pageY - 70 + "px")
+                .style("display", "inline-block")
+                .html(d.key + ": " +(d.value.amount));
+            })
+            .on("mouseout", function(d){ tooltip.style("display", "none");});
 
         // //Line
         // const line = d3.line()
