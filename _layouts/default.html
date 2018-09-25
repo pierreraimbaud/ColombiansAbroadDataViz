@@ -94,11 +94,11 @@
       {
         var dataCountryList = d3.nest().key(function(d)
                                                   {
-                                                      return d.País;
+                                                      return d.Country;
                                                     
                                                  })
         .rollup(function(d) { 
-   return d3.sum(d, function(g) {return g.Cantidad_de_personas; });
+   return d3.sum(d, function(g) {return g.Quantity; });
   })
                                             // .rollup(function(d)
                                                    // {
